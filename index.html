@@ -91,7 +91,7 @@ body {
 }
 		</style>
 		<link rel='icon' href='index.png'><style>#canvas { width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); margin: auto; position: absolute; inset: 0; }</style>
-	<meta name="velocity-build" content="58d97c31710f948c"></head>
+	<meta name="velocity-build" content="ab14b96632906c37"></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
 			Your browser does not support the canvas tag.
@@ -109,7 +109,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":17575756,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":23944892,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -117,6 +117,62 @@ const engine = new Engine(GODOT_CONFIG);
 	const statusOverlay = document.getElementById('status');
 	const statusProgress = document.getElementById('status-progress');
 	const statusNotice = document.getElementById('status-notice');
+	const phaseLabel = document.createElement('div');
+	phaseLabel.id = 'status-phase';
+	phaseLabel.setAttribute('role', 'status');
+	phaseLabel.setAttribute('aria-live', 'polite');
+	phaseLabel.style.cssText = 'position:absolute;bottom:16%;left:5%;right:5%;text-align:center;font:16px Arial,sans-serif;color:white;z-index:1';
+	statusOverlay.appendChild(phaseLabel);
+	const startup = window.__velocityStartup = (() => {
+		const state = {phase: 'engine-download', completed: 0, total: 0,
+			engineFinished: false, gameReady: false, ready: false, failed: false,
+			startedAt: performance.now()};
+		function report(phase, completed, total, label) {
+			if (state.ready || state.failed) return;
+			Object.assign(state, {phase, completed, total});
+			phaseLabel.textContent = label;
+			setStatusMode('progress');
+			if (total > 0) {
+				statusProgress.max = total;
+				statusProgress.value = Math.min(completed, total);
+			} else {
+				statusProgress.removeAttribute('value');
+				statusProgress.removeAttribute('max');
+			}
+		}
+		function finishIfReady() {
+			if (!state.engineFinished || !state.gameReady || state.failed || state.ready) return;
+			requestAnimationFrame(() => {
+				if (state.failed || state.ready) return;
+				state.ready = true;
+				state.phase = 'ready';
+				state.durationMs = performance.now() - state.startedAt;
+				setStatusMode('hidden');
+			});
+		}
+		return {
+			state, report,
+			engineProgress(current, total) {
+				if (state.phase !== 'engine-download') return;
+				const known = current > 0 && total > 0;
+				report('engine-download', known ? current : 0, known ? total : 0,
+					known ? `Downloading engine and game: ${current} / ${total} bytes` : 'Downloading engine and game...');
+			},
+			engineStarted() {
+				state.engineFinished = true;
+				state.engineStartedAt = performance.now();
+				if (state.phase === 'engine-download') report('engine-start', 0, 0, 'Starting engine...');
+				finishIfReady();
+			},
+			gameReady() {
+				state.gameReady = true;
+				state.gameReadyAt = performance.now();
+				finishIfReady();
+			},
+			fail() { state.failed = true; phaseLabel.style.display = 'none'; },
+		};
+	})();
+
 
 	let initializing = true;
 	let statusMode = '';
@@ -148,6 +204,7 @@ const engine = new Engine(GODOT_CONFIG);
 	}
 
 	function displayFailureNotice(err) {
+		startup.fail();
 		console.error(err);
 		if (err instanceof Error) {
 			setStatusNotice(err.message);
@@ -196,19 +253,13 @@ const engine = new Engine(GODOT_CONFIG);
 			displayFailureNotice(missingMsg + missing.join('\n'));
 		}
 	} else {
-		setStatusMode('progress');
+		startup.engineProgress(0, 0);
 		engine.startGame({
 			'onProgress': function (current, total) {
-				if (current > 0 && total > 0) {
-					statusProgress.value = current;
-					statusProgress.max = total;
-				} else {
-					statusProgress.removeAttribute('value');
-					statusProgress.removeAttribute('max');
-				}
+				startup.engineProgress(current, total);
 			},
 		}).then(() => {
-			setStatusMode('hidden');
+			startup.engineStarted();
 		}, displayFailureNotice);
 	}
 }());

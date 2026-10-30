@@ -91,7 +91,7 @@ body {
 }
 		</style>
 		<link rel='icon' href='index.png'><style>#canvas { width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); margin: auto; position: absolute; inset: 0; }</style>
-	<meta name="velocity-build" content="f4d1592bec926c41"></head>
+	<meta name="velocity-build" content="6ec481fcc041ad22"></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
 			Your browser does not support the canvas tag.
@@ -109,7 +109,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":73937412,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":73937444,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -276,8 +276,8 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=f4d1592bec926c41",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=f4d1592bec926c41" : name, size])),
+			'mainPack': "index.pck?build=6ec481fcc041ad22",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=6ec481fcc041ad22" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

@@ -1,5 +1,12 @@
 [
  {
+  "version": 22,
+  "commit": "67ba588",
+  "date": "2026-10-31",
+  "subject": "Strengthen the boost jolt, keep overspeed, and require boosting to break obstacles",
+  "body": "- Jolt starts steeper with a gentler taper and stays half strength at top speed.\n- Jolt sound is quieter and loses the wind-like tail; wind follows speed only.\n- Speed above the limit decays with a light drag instead of 25 m/s^2.\n- Obstacles break only while boosting."
+ },
+ {
   "version": 21,
   "commit": "f927446",
   "date": "2026-10-31",

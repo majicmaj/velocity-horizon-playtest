@@ -1,5 +1,12 @@
 [
  {
+  "version": 31,
+  "commit": "8ee7df2",
+  "date": "2026-10-31",
+  "subject": "Keep the runner on the ground at speed, fix the wind loop and tie the start boom to the first movement",
+  "body": "- Manual floor snap (speed-scaled reach): the runner was airborne 9-93% of the time on real terrain because\n  Godot skips snapping while velocity points up, so every 4 m terrain row launched it.\n- Wind is steady air noise without the wave-like swell, quieter and speed-only.\n- The start boom plays once per run on first movement, not on any first input."
+ },
+ {
   "version": 30,
   "commit": "cbfc258",
   "date": "2026-10-31",

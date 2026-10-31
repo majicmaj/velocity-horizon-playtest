@@ -91,7 +91,28 @@ body {
 }
 		</style>
 		<link rel='icon' href='index.png'><style>#canvas { width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); margin: auto; position: absolute; inset: 0; }</style>
-	<meta name="velocity-build" content="89b0f342adda62e1"></head>
+	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=e352ca4f521e') format('truetype');font-display:swap}
+#race-hud,#mobile-ui{--side:clamp(76px,17vh,172px)}
+#mobile-knob{background:none!important;box-shadow:none!important}
+#race-hud{position:fixed;inset:0;z-index:18;pointer-events:none;color:#f2f8ff;font-family:Velocity,system-ui,sans-serif;font-weight:700;font-style:italic;--side:clamp(76px,17vh,172px);--tab:clamp(110px,20vw,250px);--dial:clamp(300px,52vw,760px);text-shadow:0 2px 3px #000,0 0 7px #1f86ff}
+.race-art{position:absolute;display:block;overflow:hidden;pointer-events:none}.race-art img{position:absolute;max-width:none;pointer-events:none;user-select:none}
+#race-top{position:absolute;top:max(6px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:min(56vw,860px);aspect-ratio:1155/90;container-type:inline-size}#race-top .race-art{inset:0}
+#race-values{position:absolute;left:4%;right:3%;top:10%;bottom:10%;display:grid;grid-template-columns:repeat(4,1fr);align-items:center;text-align:center}#race-values b{font-size:3.3cqw;line-height:1}#race-values small{display:block;font-size:1.45cqw;letter-spacing:.06em;line-height:1.1;color:#9fd2ff}
+#race-dial{position:absolute;bottom:max(0px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:var(--dial);aspect-ratio:976/185;container-type:inline-size}#race-dial .race-art{inset:0}#race-dial .race-art img{width:100%;height:100%;left:0;top:0}
+#race-arc{-webkit-mask-image:conic-gradient(from -84deg at 52.46% 63.24%,#000 calc(var(--p,0)*168deg),transparent 0);mask-image:conic-gradient(from -84deg at 52.46% 63.24%,#000 calc(var(--p,0)*168deg),transparent 0)}
+#race-fill{clip-path:inset(60% calc(100% - 41.9% - var(--c,1)*35.3%) 0 0)}
+#race-speed{position:absolute;left:0;right:0;top:27%;font-size:9.4cqw;line-height:.85;text-align:center;letter-spacing:.02em}#race-speed small{font-size:.3em;color:#9fd2ff;letter-spacing:0}
+#race-charge{position:absolute;left:32.6%;width:9%;top:76%;font-size:1.9cqw;text-align:center;line-height:1}
+.race-tab{position:absolute;top:max(6px,env(safe-area-inset-top));width:var(--tab);pointer-events:auto;border:0;background:none;color:inherit;font:italic 700 calc(var(--tab)*.085) Velocity,system-ui;cursor:pointer;padding:0;text-shadow:inherit;min-height:44px}.race-tab .race-art{inset:0}.race-tab>span:last-child{position:absolute;top:50%;transform:translateY(-50%);line-height:1;text-align:center}.race-tab:active{filter:brightness(1.3)}
+#race-controls{left:max(5px,env(safe-area-inset-left));aspect-ratio:320/93}#race-controls>span:last-child{left:36%;right:10%}#race-pause{right:max(5px,env(safe-area-inset-right));aspect-ratio:270/97}#race-pause>span:last-child{left:46%;right:9%}
+#race-fullscreen{position:absolute;right:max(12px,env(safe-area-inset-right));top:calc(max(6px,env(safe-area-inset-top)) + var(--tab)*.4);width:44px;height:44px;border:1px solid #3aa0ffcc;background:#06122bd9;border-radius:10px;box-shadow:0 0 10px #1c7dff99,inset 0 0 6px #1c7dff66;font:26px system-ui;color:#d9eeff;pointer-events:auto;cursor:pointer}
+#race-toast{position:absolute;top:calc(max(6px,env(safe-area-inset-top)) + min(56vw,860px)*.09);left:20%;right:20%;text-align:center;font-size:clamp(12px,2.5vh,23px);opacity:0;transition:opacity .15s}#race-toast.show{opacity:1}
+#mobile-ui{font-family:Velocity,system-ui!important}#mobile-top{display:none!important}#mobile-stick{width:calc(var(--side)*1.75)!important;height:calc(var(--side)*1.75)!important;bottom:max(10px,env(safe-area-inset-bottom))!important;left:max(5px,env(safe-area-inset-left))!important;border:0!important;border-radius:50%;background:none!important;color:transparent;font-size:0!important;overflow:visible;box-sizing:border-box}#mobile-stick .race-art{inset:0}#mobile-knob{position:absolute;width:30.7%;height:30.7%;left:34.65%;top:34.65%;border-radius:50%;filter:drop-shadow(0 0 6px #4aa8ff);pointer-events:none;transition:transform .04s linear}#mobile-knob .race-art{inset:0}
+#mobile-actions{grid-template-columns:repeat(2,var(--side))!important;gap:2px!important;right:calc(max(5px,env(safe-area-inset-right)) + var(--side)*.2)!important;bottom:max(8px,env(safe-area-inset-bottom))!important}#mobile-actions button{width:var(--side);height:var(--side)!important;border:0!important;background:none!important;position:relative;padding:0!important;color:transparent;font-size:0!important;min-height:48px!important;cursor:pointer}#mobile-actions .race-art{inset:-4%}#mobile-actions [data-action=boost] .race-art{inset:auto;left:-4%;bottom:-4%;width:127.7%;height:123%}#mobile-actions [data-action=drift]{order:4}#mobile-actions [data-action=reverse]{order:3}#mobile-actions button:active{filter:brightness(1.35);transform:scale(.96)}
+#mobile-panel{font-style:normal;background:linear-gradient(135deg,#071430,#0b1d3c)!important;border:1px solid #2f8fff;box-shadow:0 0 26px #1c7dff44}#mobile-panel button{font-family:Velocity,system-ui!important;border-color:#2f7fd8!important;background:#0c2247!important}#mobile-panel h2{color:#bfe0ff}
+@media (orientation:portrait){#race-hud,#mobile-ui{--side:clamp(68px,20vw,110px)}#race-hud{--dial:86vw;--tab:40vw}#race-top{width:94vw;top:calc(max(6px,env(safe-area-inset-top)) + 16vw)}#race-toast{top:calc(24vw + 30px)}#race-fullscreen{top:calc(24vw + 40px)}#race-dial{bottom:calc(var(--side)*2 + 16px)}#mobile-stick{bottom:18px!important;width:43vw!important;height:43vw!important}}
+@media (min-width:1200px) and (orientation:landscape){#race-hud,#mobile-ui{--side:156px}}
+</style><meta name="velocity-build" content="d944a2fab66bb508"></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
 			Your browser does not support the canvas tag.
@@ -109,7 +130,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":74717480,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":74918984,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -333,9 +354,9 @@ const engine = new Engine(GODOT_CONFIG);
             }
             if (now - this.jumpTime < 180) return;
             const axis = v => Math.sign(v) * clamp((Math.abs(v) - 3) / 19, 0, 1);
-            const drive = axis(delta(this.basePitch, this.pitch)) * (this.invertTilt ? -1 : 1);
+            const drive = axis(delta(this.pitch, this.basePitch)) * (this.invertTilt ? -1 : 1);
             this.throttle = Math.max(0, drive); this.brake = Math.max(0, -drive);
-            this.steer = axis(this.baseRoll - this.roll) * (this.invertSteer ? -1 : 1);
+            this.steer = axis(this.roll - this.baseRoll) * (this.invertSteer ? -1 : 1);
         }
     }
     if (typeof module !== 'undefined') module.exports = Motion;
@@ -363,7 +384,6 @@ const engine = new Engine(GODOT_CONFIG);
         state.jump_serial = touchJumps + core.jumpSerial;
         if (state.paused) { state.throttle = state.brake = state.steer = 0; state.boost = state.drift = state.reverse = false; }
     }};
-    if (!enabled) return;
     const audioContexts = new Set();
     for (const key of ['AudioContext', 'webkitAudioContext']) {
         const NativeContext = window[key];
@@ -381,6 +401,8 @@ const engine = new Engine(GODOT_CONFIG);
         }
         if (api.start_audio) api.start_audio();
     }
+    api.unlock_audio = unlockAudio;
+    if (!enabled) return;
     const meta = document.querySelector('meta[name=viewport]');
     if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
     const style = document.createElement('style');
@@ -470,6 +492,94 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 (() => {
+    if (window.__velocityHud || !document.body) return;
+    const mobile = window.__velocityMobile, state = mobile.state;
+    const W = 1400, H = 560;
+    const regions = {
+        stick:[0,0,365,365],boost:[369,0,246,237],jump:[619,0,190,184],drift:[813,0,187,182],reverse:[1004,0,193,180],
+        knob:[1201,0,112,112],pause:[0,369,270,97],controls:[274,369,320,93],bar:[0,470,1155,90]
+    };
+    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=e352ca4f521e" alt=""></span>`;
+    function art(name) {
+        const [x,y,w,h] = regions[name];
+        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=e352ca4f521e" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
+    }
+    const hud = document.createElement('div'); hud.id = 'race-hud'; hud.hidden = true;
+    hud.innerHTML = `<button id="race-controls" class="race-tab" aria-label="Controls">${art('controls')}<span>CONTROLS</span></button>
+        <div id="race-top">${art('bar')}<div id="race-values"><div><b id="race-ladybugs">000</b><small>LADYBUGS</small></div><div><b id="race-beetles">000</b><small>BEETLES</small></div><div><b id="race-distance">0 m</b><small>DISTANCE</small></div><div><b id="race-time">00:00</b><small>TIME</small></div></div></div>
+        <button id="race-pause" class="race-tab" aria-label="Pause">${art('pause')}<span>PAUSE</span></button>
+        <button id="race-fullscreen" aria-label="Fullscreen" title="Fullscreen">⛶</button><div id="race-toast" role="status"></div>
+        <div id="race-dial">${layer('hud-dial.png')}${layer('hud-dial-fill.png','race-arc')}${layer('hud-dial-fill.png','race-fill')}<div id="race-speed">000 <small>km/h</small></div><div id="race-charge" aria-label="Boost">100%</div></div>`;
+    document.body.appendChild(hud);
+    const find = id => document.getElementById(id);
+    let toastUntil = 0, lastLadybugs = 0, lastBeetles = 0, speed = 0, lastTime = 0;
+    function toast(message) { find('race-toast').textContent = message; toastUntil = performance.now()+1800; }
+    function pause(value) { state.paused=value; state.pause_serial++; }
+    find('race-controls').onclick = () => {
+        if (state.enabled) find('mobile-settings').click();
+        else { pause(true); toast('W / arrows drive · Ctrl drift · Shift boost · Space jump · Esc resumes'); }
+    };
+    find('race-pause').onclick = () => {
+        if (state.enabled) find('mobile-pause').click();
+        else { mobile.unlock_audio?.(); pause(!state.paused); }
+    };
+    find('race-fullscreen').onclick = async () => {
+        const root = document.documentElement;
+        try {
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                const exit = document.exitFullscreen || document.webkitExitFullscreen;
+                if (exit) await exit.call(document);
+            } else {
+                const enter = root.requestFullscreen || root.webkitRequestFullscreen;
+                if (!enter) { toast('Fullscreen unavailable — use your browser’s Add to Home Screen option'); return; }
+                await enter.call(root);
+            }
+            window.__velocityDisplay?.refresh();
+        } catch (e) { toast('Fullscreen was blocked by this browser'); }
+    };
+    const fullscreenChanged = () => {
+        const label = (document.fullscreenElement || document.webkitFullscreenElement) ? 'Exit fullscreen' : 'Fullscreen';
+        find('race-fullscreen').setAttribute('aria-label',label); find('race-fullscreen').title=label;
+        window.__velocityDisplay?.refresh();
+    };
+    document.addEventListener('fullscreenchange', fullscreenChanged);
+    document.addEventListener('webkitfullscreenchange', fullscreenChanged);
+    function decorate() {
+        if (!state.enabled || !find('mobile-stick') || find('mobile-knob')) return;
+        const pad = find('mobile-stick'); pad.innerHTML = art('stick')+`<span id="mobile-knob">${art('knob')}</span>`;
+        document.querySelectorAll('#mobile-actions button').forEach(button => {
+            const name = button.dataset.action;
+            button.innerHTML = art(name);
+            button.setAttribute('aria-label',name[0].toUpperCase()+name.slice(1));
+        });
+    }
+    const fields = ['race-ladybugs','race-beetles','race-distance','race-time','race-speed','race-charge'];
+    function frame(now) {
+        requestAnimationFrame(frame);
+        if (now-lastTime < 32) return;
+        const dt = Math.min((now-lastTime)/1000,0.1); lastTime=now;
+        if (!window.__velocityStartup?.state.ready) return;
+        hud.hidden=false; decorate();
+        const ladybugs = state.ladybugs || 0, beetles = state.beetles || 0;
+        if (ladybugs > lastLadybugs) toast(`+${ladybugs-lastLadybugs} km/h · LADYBUG`);
+        else if (beetles > lastBeetles) toast(`+${beetles-lastBeetles}% BOOST · BEETLE`);
+        lastLadybugs=ladybugs; lastBeetles=beetles;
+        speed += ((state.speed || 0)-speed)*(1-Math.exp(-dt*14));
+        const time = state.time || 0, charge = Math.max(0,Math.min(1,state.charge ?? 1));
+        const values = [String(ladybugs).padStart(3,'0'),String(beetles).padStart(3,'0'),`${Math.round(state.distance || 0).toLocaleString()} m`,
+            `${String(Math.floor(time/60)).padStart(2,'0')}:${(time%60).toFixed(1).padStart(4,'0')}`,`${String(Math.round(speed)).padStart(3,'0')} <small>km/h</small>`,`${Math.round(charge*100)}%`];
+        fields.forEach((id,i)=>{ if(find(id).innerHTML!==values[i]) find(id).innerHTML=values[i]; });
+        find('race-pause').lastElementChild.textContent=state.paused?'RESUME':'PAUSE';
+        find('race-pause').setAttribute('aria-label',state.paused?'Resume':'Pause');
+        find('race-toast').classList.toggle('show',now<toastUntil);
+        find('race-arc').style.setProperty('--p',Math.min(1,speed/300).toFixed(3));
+        find('race-fill').style.setProperty('--c',(Math.ceil(charge*8)/8).toFixed(3));
+        const knob=find('mobile-knob'); if(knob) knob.style.transform=`translate(${state.steer*85}%,${(state.brake-state.throttle)*85}%)`;
+    }
+    window.__velocityHud = {toast}; requestAnimationFrame(frame);
+})();
+
+(() => {
     const canvas = document.getElementById('canvas');
     let timer = null;
     const state = {width: 1920, height: 1080};
@@ -494,8 +604,8 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=89b0f342adda62e1",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=89b0f342adda62e1" : name, size])),
+			'mainPack': "index.pck?build=d944a2fab66bb508",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=d944a2fab66bb508" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

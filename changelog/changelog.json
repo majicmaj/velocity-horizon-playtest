@@ -1,5 +1,12 @@
 [
  {
+  "version": 36,
+  "commit": "cf4566b",
+  "date": "2026-10-31",
+  "subject": "Keep smashing rocks and trees for a moment after boost or an air jolt",
+  "body": ""
+ },
+ {
   "version": 35,
   "commit": "4ebf291",
   "date": "2026-10-31",

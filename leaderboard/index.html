@@ -37,7 +37,7 @@ td.name{overflow-wrap:anywhere}th.num,td.num{text-align:right;font-variant-numer
 </main>
 <script>
 const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
-const current = 'v35';
+const current = 'v36';
 const rows = document.getElementById('rows'), note = document.getElementById('note'), picker = document.getElementById('version'), info = document.getElementById('vinfo');
 const fmt = s => `${String(Math.floor(s / 60)).padStart(2, '0')}:${(s % 60).toFixed(2).padStart(5, '0')}`;
 const esc = t => t.replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));

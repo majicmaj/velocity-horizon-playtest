@@ -1,5 +1,12 @@
 [
  {
+  "version": 28,
+  "commit": "5196a6c",
+  "date": "2026-10-31",
+  "subject": "Make boost ground-only; the second-jump air jolt is the one airborne exception",
+  "body": ""
+ },
+ {
   "version": 27,
   "commit": "8c1cf8c",
   "date": "2026-10-31",

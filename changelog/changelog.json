@@ -1,5 +1,12 @@
 [
  {
+  "version": 24,
+  "commit": "616185f",
+  "date": "2026-10-31",
+  "subject": "Make ladybugs raise top speed and beetles raise boost capacity",
+  "body": "- Ladybug: +1 km/h normal top speed for the rest of the run.\n- Beetle: +1% of the original boost meter capacity (and fills that amount).\n- Perks reset on restart; HUD shows charge against capacity and the arc fills at the raised top speed."
+ },
+ {
   "version": 23,
   "commit": "90daeee",
   "date": "2026-10-31",

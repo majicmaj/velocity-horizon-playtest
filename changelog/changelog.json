@@ -1,5 +1,12 @@
 [
  {
+  "version": 32,
+  "commit": "0bb3f6d",
+  "date": "2026-10-31",
+  "subject": "Make boost refill speed-independent and keep a leaderboard per game version",
+  "body": "- Beetles raise boost capacity without filling the meter; the Shift jolt has a fixed cost.\n- Boards are per version (v<commit count>); the game shows only its own version.\n- The site gets a version picker with player counts and two read-only legacy boards."
+ },
+ {
   "version": 31,
   "commit": "8ee7df2",
   "date": "2026-10-31",

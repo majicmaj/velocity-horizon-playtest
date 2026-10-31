@@ -11,6 +11,8 @@ main{max-width:720px;margin:0 auto;padding:32px 16px 48px}
 h1{margin:0 0 4px;font-size:28px;letter-spacing:.04em;font-style:italic}p.sub{margin:0 0 20px;color:#8fb8e8}
 nav{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
 nav a{display:inline-flex;align-items:center;justify-content:center;min-width:120px;min-height:44px;padding:8px 18px;border:1px solid #3aa0ff;border-radius:10px;background:linear-gradient(#0f3f86,#0a2760);color:#fff;text-decoration:none;font-style:italic;font-weight:700;letter-spacing:.04em}
+.picker{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 16px}.picker label{color:#6fb4ff;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+select{min-height:44px;padding:6px 36px 6px 14px;border:1px solid #3aa0ff;border-radius:10px;background:#06122b;color:#fff;font:700 16px system-ui,sans-serif;cursor:pointer}#vinfo{color:#8fb8e8;font-size:14px}
 nav a:hover{filter:brightness(1.2)}nav a[aria-current=page]{background:linear-gradient(#1c5fd0,#1347a3);box-shadow:0 0 12px #3aa0ff88}
 table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #2f8fff66;border-radius:14px;overflow:hidden;background:#06122bcc}
 th,td{padding:11px 14px;text-align:left}th{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#6fb4ff;background:#0a1f4a;border-bottom:1px solid #2f8fff66}
@@ -23,7 +25,8 @@ td.name{overflow-wrap:anywhere}th.num,td.num{text-align:right;font-variant-numer
 <body>
 <main>
 <h1>Leaderboard</h1>
-<p class="sub">Fastest finishes, all players. Times from the earlier, shorter 11.2 km course are kept separately.</p>
+<p class="sub">Fastest finishes, all players. Every game version has its own board; the game shows only the version you are playing.</p>
+<div class="picker"><label for="version">Version</label><select id="version" aria-label="Game version"></select><span id="vinfo"></span></div>
 <nav aria-label="Site"><a href="../">Play</a><a href="./" aria-current="page">Leaderboard</a><a href="../changelog/">Changelog</a></nav>
 <table>
 <thead><tr><th class="rank">Rank</th><th>Name</th><th class="num">Time</th><th class="num opt">Ladybugs</th><th class="num opt">Beetles</th></tr></thead>
@@ -34,22 +37,49 @@ td.name{overflow-wrap:anywhere}th.num,td.num{text-align:right;font-variant-numer
 </main>
 <script>
 const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
-const course = '2';
-const rows = document.getElementById('rows'), note = document.getElementById('note');
+const current = 'v32';
+const rows = document.getElementById('rows'), note = document.getElementById('note'), picker = document.getElementById('version'), info = document.getElementById('vinfo');
 const fmt = s => `${String(Math.floor(s / 60)).padStart(2, '0')}:${(s % 60).toFixed(2).padStart(5, '0')}`;
 const esc = t => t.replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
-async function load() {
-  if (!base) { note.textContent = 'The shared leaderboard is not connected.'; return; }
+let versions = [];
+async function getJson(path) {
+  const response = await fetch(base + path);
+  if (!response.ok) throw new Error(response.status);
+  return response.json();
+}
+function describe(id) {
+  const entry = versions.find(v => v.id === id);
+  const parts = [];
+  if (id === current) parts.push('current version');
+  if (entry) parts.push(`${entry.count} ${entry.count === 1 ? 'player' : 'players'}`);
+  info.textContent = parts.join(' · ');
+}
+async function showBoard() {
+  const id = picker.value;
+  describe(id);
+  history.replaceState(null, '', '#' + id);
   try {
-    const response = await fetch(base + '/top?limit=50&course=' + course);
-    if (!response.ok) throw new Error(response.status);
-    const {top} = await response.json();
+    const {top} = await getJson('/top?limit=50&version=' + encodeURIComponent(id));
     rows.innerHTML = top.map((r, i) => `<tr><td class="rank">${i + 1}</td><td class="name">${esc(r.name)}</td><td class="num time">${fmt(r.time)}</td><td class="num opt">${r.ladybugs}</td><td class="num opt">${r.beetles}</td></tr>`).join('');
-    note.textContent = top.length ? '' : 'No times yet. Be the first!';
+    note.textContent = top.length ? '' : (id === current ? 'No times for this version yet. Be the first!' : 'No times for this version.');
     document.getElementById('stamp').textContent = 'Updated ' + new Date().toLocaleTimeString();
   } catch (error) { note.textContent = 'Couldn’t load the leaderboard. Try again in a moment.'; }
 }
-load(); setInterval(load, 60000);
+async function load() {
+  if (!base) { note.textContent = 'The shared leaderboard is not connected.'; return; }
+  try {
+    versions = (await getJson('/versions')).versions;
+    const ids = versions.map(v => v.id);
+    if (!ids.includes(current)) versions.unshift({id: current, label: current, count: 0});
+    const wanted = location.hash.slice(1);
+    const selected = versions.some(v => v.id === wanted) ? wanted : current;
+    picker.innerHTML = versions.map(v => `<option value="${esc(v.id)}">${esc(v.label.startsWith('v') || v.label === 'dev' ? v.label + (v.id === current ? ' (current)' : '') : v.label)}</option>`).join('');
+    picker.value = selected;
+    picker.onchange = showBoard;
+    await showBoard();
+  } catch (error) { note.textContent = 'Couldn’t load the leaderboard. Try again in a moment.'; }
+}
+load(); setInterval(() => { if (base && versions.length) showBoard(); }, 60000);
 </script>
 </body>
 </html>

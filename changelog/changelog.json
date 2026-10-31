@@ -1,5 +1,12 @@
 [
  {
+  "version": 26,
+  "commit": "2f61845",
+  "date": "2026-10-31",
+  "subject": "Fix stuck controls after restart, make boost refill time-based, add ground fire trail (first pass)",
+  "body": "- All restarts go through one function that clears held inputs and syncs the page's pause state.\n- Boost refills with time only (10% of the meter per second), doubled while airborne.\n- Top-speed ground fire trail: pooled additive glow and flame tongues, 3 s life, first visual pass."
+ },
+ {
   "version": 25,
   "commit": "90bb3b3",
   "date": "2026-10-31",

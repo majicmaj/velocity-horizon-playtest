@@ -129,7 +129,7 @@ body {
 #race-meter-alert{position:absolute;left:41.4%;width:36.4%;top:74%;height:15%;border:2px solid #ff3b30;border-radius:7px;transform:skewX(-15deg);box-shadow:0 0 10px #ff3b30,inset 0 0 8px #ff3b3099;opacity:0;pointer-events:none}
 #race-meter-alert.flash{animation:meter-alert .8s ease-out}
 @keyframes meter-alert{0%{opacity:1}25%{opacity:.3}40%{opacity:1}55%{opacity:.3}70%{opacity:1}100%{opacity:0}}
-</style><meta name="velocity-build" content="1f92c83584c5e707"></head>
+</style><meta name="velocity-build" content="b3c0877aeb9ece8e"></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
 			Your browser does not support the canvas tag.
@@ -147,7 +147,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":75306324,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":75318332,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -421,7 +421,7 @@ const engine = new Engine(GODOT_CONFIG);
     api.unlock_audio = unlockAudio;
     // Relative pages work on any host the build is served from; the home link is the public address.
     window.__velocitySiteLinks = '<p class="site-links"><a href="https://vh.hobbyhood.app" target="_blank" rel="noopener">vh.hobbyhood.app</a> · '
-        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v25</span></p>';
+        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v26</span></p>';
     if (!enabled) return;
     const meta = document.querySelector('meta[name=viewport]');
     if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
@@ -781,8 +781,8 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=1f92c83584c5e707",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=1f92c83584c5e707" : name, size])),
+			'mainPack': "index.pck?build=b3c0877aeb9ece8e",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=b3c0877aeb9ece8e" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

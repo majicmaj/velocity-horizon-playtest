@@ -91,7 +91,7 @@ body {
 }
 		</style>
 		<link rel='icon' href='index.png'><style>#canvas { width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); margin: auto; position: absolute; inset: 0; }</style>
-	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=3e42fa260784') format('truetype');font-display:swap}
+	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=14e8495631a4') format('truetype');font-display:swap}
 #race-hud,#mobile-ui{--side:clamp(76px,17vh,172px)}
 #mobile-knob{background:none!important;box-shadow:none!important}
 #race-hud{position:fixed;inset:0;z-index:18;pointer-events:none;color:#f2f8ff;font-family:Velocity,system-ui,sans-serif;font-weight:700;font-style:italic;--side:clamp(76px,17vh,172px);--tab:clamp(110px,20vw,250px);--dial:clamp(300px,52vw,760px);text-shadow:0 2px 3px #000,0 0 7px #1f86ff}
@@ -126,7 +126,10 @@ body {
 .race-menu-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.race-menu-actions button,#lb-close{min-height:48px;padding:6px 16px;border:1px solid #3aa0ff;border-radius:10px;background:linear-gradient(#0f3f86,#0a2760);color:#fff;font:italic 700 17px Velocity,system-ui,sans-serif;letter-spacing:.06em;cursor:pointer}.race-menu-actions button:active,#lb-close:active{filter:brightness(1.3)}
 .site-links{margin:14px 0 4px;font-size:13px;color:#8fb8e8;font-style:normal}.site-links a{color:#9fd2ff}.site-version{opacity:.7;margin-left:4px}
 #lb[data-mode=view] #lb-time,#lb[data-mode=view] #lb-sub,#lb[data-mode=view] #lb-form,#lb[data-mode=view] #lb-again{display:none}#lb[data-mode=finish] #lb-close{display:none}#lb .lb-page{margin:10px 0 0;font-size:13px}#lb .lb-page a{color:#9fd2ff}
-</style><meta name="velocity-build" content="1609d8a1389b2426"></head>
+#race-meter-alert{position:absolute;left:41.4%;width:36.4%;top:74%;height:15%;border:2px solid #ff3b30;border-radius:7px;transform:skewX(-15deg);box-shadow:0 0 10px #ff3b30,inset 0 0 8px #ff3b3099;opacity:0;pointer-events:none}
+#race-meter-alert.flash{animation:meter-alert .8s ease-out}
+@keyframes meter-alert{0%{opacity:1}25%{opacity:.3}40%{opacity:1}55%{opacity:.3}70%{opacity:1}100%{opacity:0}}
+</style><meta name="velocity-build" content="1f92c83584c5e707"></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
 			Your browser does not support the canvas tag.
@@ -144,7 +147,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":75303716,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":75306324,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -418,7 +421,7 @@ const engine = new Engine(GODOT_CONFIG);
     api.unlock_audio = unlockAudio;
     // Relative pages work on any host the build is served from; the home link is the public address.
     window.__velocitySiteLinks = '<p class="site-links"><a href="https://vh.hobbyhood.app" target="_blank" rel="noopener">vh.hobbyhood.app</a> · '
-        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v24</span></p>';
+        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v25</span></p>';
     if (!enabled) return;
     const meta = document.querySelector('meta[name=viewport]');
     if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
@@ -517,10 +520,10 @@ const engine = new Engine(GODOT_CONFIG);
         stick:[0,0,365,365],boost:[369,0,246,237],jump:[619,0,190,184],drift:[813,0,187,182],reverse:[1004,0,193,180],
         knob:[1201,0,112,112],pause:[0,369,270,97],controls:[274,369,320,93],bar:[0,470,1155,90]
     };
-    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=3e42fa260784" alt=""></span>`;
+    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=14e8495631a4" alt=""></span>`;
     function art(name) {
         const [x,y,w,h] = regions[name];
-        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=3e42fa260784" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
+        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=14e8495631a4" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
     }
     const hud = document.createElement('div'); hud.id = 'race-hud'; hud.hidden = true;
     hud.innerHTML = `<button id="race-controls" class="race-tab" aria-label="Controls">${art('controls')}<span>CONTROLS</span></button>
@@ -528,12 +531,12 @@ const engine = new Engine(GODOT_CONFIG);
         <button id="race-pause" class="race-tab" aria-label="Pause">${art('pause')}<span>PAUSE</span></button>
         <button id="race-fullscreen" aria-label="Fullscreen" title="Fullscreen">⛶</button><div id="race-toast" role="status"></div>
         <div id="race-menu" hidden><div class="race-menu-card" role="dialog" aria-label="Paused"><h2>PAUSED</h2>
-            <ul class="race-keys"><li><b>W / ↑</b> run</li><li><b>S / ↓</b> brake · reverse</li><li><b>A D / ← →</b> steer</li><li><b>Space</b> jump</li><li><b>Shift</b> boost</li><li><b>Ctrl</b> drift</li><li><b>R</b> restart</li><li><b>M</b> mute</li><li><b>Esc</b> resume</li></ul>
+            <ul class="race-keys"><li><b>W / ↑</b> run</li><li><b>S / ↓</b> brake · reverse</li><li><b>A D / ← →</b> steer</li><li><b>Space</b> jump · again in air: boost jolt</li><li><b>Shift</b> boost</li><li><b>Ctrl</b> drift</li><li><b>R</b> restart</li><li><b>M</b> mute</li><li><b>Esc</b> resume</li></ul>
             <div class="race-menu-actions"><button id="race-menu-resume">Resume</button><button id="race-menu-restart">Restart run</button><button id="race-menu-board">Leaderboard</button></div>${window.__velocitySiteLinks || ''}</div></div>
-        <div id="race-dial">${layer('hud-dial.png')}${layer('hud-dial-fill.png','race-arc')}${layer('hud-dial-fill.png','race-fill')}<div id="race-speed">000 <small>km/h</small></div><div id="race-charge" aria-label="Boost">100%</div></div>`;
+        <div id="race-dial">${layer('hud-dial.png')}${layer('hud-dial-fill.png','race-arc')}${layer('hud-dial-fill.png','race-fill')}<span id="race-meter-alert" aria-hidden="true"></span><div id="race-speed">000 <small>km/h</small></div><div id="race-charge" aria-label="Boost">100%</div></div>`;
     document.body.appendChild(hud);
     const find = id => document.getElementById(id);
-    let toastUntil = 0, lastLadybugs = 0, lastBeetles = 0, speed = 0, shownCharge = 1, shownCapacity = 1, lastTime = 0, lastFrame = 0;
+    let toastUntil = 0, lastLadybugs = 0, lastBeetles = 0, speed = 0, shownCharge = 1, shownCapacity = 1, lastDenied = null, lastTime = 0, lastFrame = 0;
     function toast(message) { find('race-toast').textContent = message; toastUntil = performance.now()+1800; }
     function pause(value) { state.paused=value; state.pause_serial++; }
     find('race-controls').onclick = () => {
@@ -590,6 +593,13 @@ const engine = new Engine(GODOT_CONFIG);
         shownCharge += (charge-shownCharge)*(1-Math.exp(-dt*16));
         find('race-arc').style.setProperty('--p',Math.min(1,speed/Math.max(300,state.max_speed || 300)).toFixed(4));
         find('race-fill').style.setProperty('--c',Math.min(1,shownCharge/shownCapacity).toFixed(4));
+        const denied = state.boost_denied ?? 0;
+        if (lastDenied === null) lastDenied = denied;
+        else if (denied !== lastDenied) {  // tried an air jolt without enough meter
+            lastDenied = denied;
+            const alert = find('race-meter-alert');
+            alert.classList.remove('flash'); void alert.offsetWidth; alert.classList.add('flash');
+        }
         if (now-lastTime < 32) return;
         lastTime=now;
         hud.hidden=false; hud.classList.toggle('touch',!!state.enabled); decorate();
@@ -771,8 +781,8 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=1609d8a1389b2426",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=1609d8a1389b2426" : name, size])),
+			'mainPack': "index.pck?build=1f92c83584c5e707",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=1f92c83584c5e707" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

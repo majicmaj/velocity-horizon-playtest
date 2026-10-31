@@ -1,5 +1,12 @@
 [
  {
+  "version": 25,
+  "commit": "90bb3b3",
+  "date": "2026-10-31",
+  "subject": "Add the mid-air boost jolt and a red boost-bar alert",
+  "body": "- Second jump press in the air with at least 20% boost fires a jolt twice as strong and\n  costly as Shift's, along the current trajectory, with a bigger shockwave and boom.\n- Not enough boost flashes a red outline on the boost bar.\n- Jolt tests moved to tests/jolt_smoke.gd to stay under the file token limit."
+ },
+ {
   "version": 24,
   "commit": "616185f",
   "date": "2026-10-31",

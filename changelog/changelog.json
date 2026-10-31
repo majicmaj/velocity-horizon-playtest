@@ -1,5 +1,12 @@
 [
  {
+  "version": 23,
+  "commit": "90daeee",
+  "date": "2026-10-31",
+  "subject": "Rebuild the leaderboard page as a table and give both site pages matching nav buttons",
+  "body": ""
+ },
+ {
   "version": 22,
   "commit": "67ba588",
   "date": "2026-10-31",

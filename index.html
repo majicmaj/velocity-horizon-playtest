@@ -91,7 +91,7 @@ body {
 }
 		</style>
 		<link rel='icon' href='index.png'><style>#canvas { width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); margin: auto; position: absolute; inset: 0; }</style>
-	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=053a43acdbd6') format('truetype');font-display:swap}
+	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=afa6cb2ee86a') format('truetype');font-display:swap}
 #race-hud,#mobile-ui{--side:clamp(76px,17vh,172px)}
 #mobile-knob{background:none!important;box-shadow:none!important}
 #race-hud{position:fixed;inset:0;z-index:18;pointer-events:none;color:#f2f8ff;font-family:Velocity,system-ui,sans-serif;font-weight:700;font-style:italic;--side:clamp(76px,17vh,172px);--tab:clamp(110px,20vw,250px);--dial:clamp(300px,52vw,760px);text-shadow:0 2px 3px #000,0 0 7px #1f86ff}
@@ -108,7 +108,7 @@ body {
 #race-fullscreen{position:absolute;right:max(12px,env(safe-area-inset-right));top:calc(max(6px,env(safe-area-inset-top)) + var(--tab)*.4);width:44px;height:44px;border:1px solid #3aa0ffcc;background:#06122bd9;border-radius:10px;box-shadow:0 0 10px #1c7dff99,inset 0 0 6px #1c7dff66;font:26px system-ui;color:#d9eeff;pointer-events:auto;cursor:pointer}
 #race-toast{position:absolute;top:calc(max(6px,env(safe-area-inset-top)) + min(56vw,860px)*.09);left:20%;right:20%;text-align:center;font-size:clamp(12px,2.5vh,23px);opacity:0;transition:opacity .15s}#race-toast.show{opacity:1}
 #mobile-ui{font-family:Velocity,system-ui!important}#mobile-top{display:none!important}#mobile-stick{width:calc(var(--side)*1.75)!important;height:calc(var(--side)*1.75)!important;bottom:max(10px,env(safe-area-inset-bottom))!important;left:max(5px,env(safe-area-inset-left))!important;border:0!important;border-radius:50%;background:none!important;color:transparent;font-size:0!important;overflow:visible;box-sizing:border-box}#mobile-stick .race-art{inset:0}#mobile-knob{position:absolute;width:30.7%;height:30.7%;left:34.65%;top:34.65%;border-radius:50%;filter:drop-shadow(0 0 6px #4aa8ff);pointer-events:none;transition:transform .04s linear}#mobile-knob .race-art{inset:0}
-#mobile-actions{grid-template-columns:repeat(2,var(--side))!important;gap:2px!important;right:calc(max(5px,env(safe-area-inset-right)) + var(--side)*.2)!important;bottom:max(8px,env(safe-area-inset-bottom))!important}#mobile-actions button{width:var(--side);height:var(--side)!important;border:0!important;background:none!important;position:relative;padding:0!important;color:transparent;font-size:0!important;min-height:48px!important;cursor:pointer}#mobile-actions .race-art{inset:-4%}#mobile-actions [data-action=boost] .race-art{inset:auto;left:-4%;bottom:-4%;width:127.7%;height:123%}#mobile-actions [data-action=drift]{order:4}#mobile-actions [data-action=reverse]{order:3}#mobile-actions button:active{filter:brightness(1.35);transform:scale(.96)}
+#mobile-actions{grid-template-columns:repeat(2,var(--side))!important;gap:clamp(6px,1.4vh,14px)!important;right:calc(max(5px,env(safe-area-inset-right)) + var(--side)*.2)!important;bottom:max(8px,env(safe-area-inset-bottom))!important}#mobile-actions button{width:var(--side);height:var(--side)!important;border:0!important;background:none!important;position:relative;padding:0!important;color:transparent;font-size:0!important;min-height:48px!important;cursor:pointer}#mobile-actions .race-art{inset:-4%}#mobile-actions [data-action=boost] .race-art{inset:auto;left:-4%;bottom:-4%;width:127.7%;height:123%}#mobile-actions [data-action=reverse]{order:1}#mobile-actions [data-action=boost]{order:2}#mobile-actions [data-action=drift]{order:3}#mobile-actions [data-action=jump]{order:4}#mobile-actions button:active{filter:brightness(1.35);transform:scale(.96)}
 #mobile-panel{font-style:normal;background:linear-gradient(135deg,#071430,#0b1d3c)!important;border:1px solid #2f8fff;box-shadow:0 0 26px #1c7dff44}#mobile-panel button{font-family:Velocity,system-ui!important;border-color:#2f7fd8!important;background:#0c2247!important}#mobile-panel h2{color:#bfe0ff}
 @media (orientation:portrait){#race-hud,#mobile-ui{--side:clamp(68px,20vw,110px)}#race-hud{--dial:min(86vw,560px);--tab:min(40vw,230px)}#race-top{width:min(94vw,680px);top:calc(max(6px,env(safe-area-inset-top)) + var(--tab)*.4)}#race-toast{top:calc(var(--tab)*.4 + 56px + min(94vw,680px)*.08)}#race-fullscreen{top:calc(var(--tab)*.4 + 66px + min(94vw,680px)*.08)}#race-hud.touch #race-dial{bottom:calc(var(--side)*2 + 16px)}#mobile-stick{bottom:18px!important;width:43vw!important;height:43vw!important}}
 @media (min-width:1200px) and (orientation:landscape){#race-hud,#mobile-ui{--side:156px}}
@@ -120,7 +120,7 @@ body {
 #lb-submit[hidden]{display:none}#lb-msg{min-height:22px;margin:8px 0 2px;font-size:14px;color:#ffd08a}#lb h3{margin:6px 0;font-size:13px;letter-spacing:.14em;color:#6fb4ff}
 #lb-list{list-style:none;margin:0 0 12px;padding:0;text-align:left;font-size:17px}#lb-list li{display:grid;grid-template-columns:2em 1fr auto;gap:6px;padding:4px 8px;border-radius:6px}#lb-list li:nth-child(odd){background:#0a1f4a80}#lb-list li.me{background:#1c5fd0;color:#fff;box-shadow:0 0 10px #3aa0ff99}#lb-list .n{color:#6fb4ff}#lb-list .who{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#lb-list .t{font-variant-numeric:tabular-nums}#lb-list .empty{display:block;color:#9fd2ff;text-align:center}
 @media (max-height:430px){#lb .lb-card{padding:10px 14px}#lb h2{font-size:16px}#lb-time{font-size:34px}#lb-sub{margin-bottom:6px}#lb-list{font-size:14px}#lb-list li{padding:2px 8px}#lb-list li:nth-child(n+6){display:none}}
-</style><meta name="velocity-build" content="9cabe80d02449564"></head>
+</style><meta name="velocity-build" content="e856c929dcaeb658"></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
 			Your browser does not support the canvas tag.
@@ -138,7 +138,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":75365980,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":75305108,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -507,10 +507,10 @@ const engine = new Engine(GODOT_CONFIG);
         stick:[0,0,365,365],boost:[369,0,246,237],jump:[619,0,190,184],drift:[813,0,187,182],reverse:[1004,0,193,180],
         knob:[1201,0,112,112],pause:[0,369,270,97],controls:[274,369,320,93],bar:[0,470,1155,90]
     };
-    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=053a43acdbd6" alt=""></span>`;
+    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=afa6cb2ee86a" alt=""></span>`;
     function art(name) {
         const [x,y,w,h] = regions[name];
-        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=053a43acdbd6" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
+        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=afa6cb2ee86a" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
     }
     const hud = document.createElement('div'); hud.id = 'race-hud'; hud.hidden = true;
     hud.innerHTML = `<button id="race-controls" class="race-tab" aria-label="Controls">${art('controls')}<span>CONTROLS</span></button>
@@ -520,7 +520,7 @@ const engine = new Engine(GODOT_CONFIG);
         <div id="race-dial">${layer('hud-dial.png')}${layer('hud-dial-fill.png','race-arc')}${layer('hud-dial-fill.png','race-fill')}<div id="race-speed">000 <small>km/h</small></div><div id="race-charge" aria-label="Boost">100%</div></div>`;
     document.body.appendChild(hud);
     const find = id => document.getElementById(id);
-    let toastUntil = 0, lastLadybugs = 0, lastBeetles = 0, speed = 0, lastTime = 0;
+    let toastUntil = 0, lastLadybugs = 0, lastBeetles = 0, speed = 0, shownCharge = 1, lastTime = 0, lastFrame = 0;
     function toast(message) { find('race-toast').textContent = message; toastUntil = performance.now()+1800; }
     function pause(value) { state.paused=value; state.pause_serial++; }
     find('race-controls').onclick = () => {
@@ -564,24 +564,28 @@ const engine = new Engine(GODOT_CONFIG);
     const fields = ['race-ladybugs','race-beetles','race-distance','race-time','race-speed','race-charge'];
     function frame(now) {
         requestAnimationFrame(frame);
-        if (now-lastTime < 32) return;
-        const dt = Math.min((now-lastTime)/1000,0.1); lastTime=now;
+        const dt = Math.min((now-lastFrame)/1000,0.1); lastFrame=now;
         if (!window.__velocityStartup?.state.ready) return;
+        // Gauges ease every display frame so they glide between the engine's ~30 Hz samples.
+        const charge = Math.max(0,Math.min(1,state.charge ?? 1));
+        speed += ((state.speed || 0)-speed)*(1-Math.exp(-dt*14));
+        shownCharge += (charge-shownCharge)*(1-Math.exp(-dt*16));
+        find('race-arc').style.setProperty('--p',Math.min(1,speed/300).toFixed(4));
+        find('race-fill').style.setProperty('--c',shownCharge.toFixed(4));
+        if (now-lastTime < 32) return;
+        lastTime=now;
         hud.hidden=false; hud.classList.toggle('touch',!!state.enabled); decorate();
         const ladybugs = state.ladybugs || 0, beetles = state.beetles || 0;
         if (ladybugs > lastLadybugs) toast(`+${ladybugs-lastLadybugs} km/h · LADYBUG`);
         else if (beetles > lastBeetles) toast(`+${beetles-lastBeetles}% BOOST · BEETLE`);
         lastLadybugs=ladybugs; lastBeetles=beetles;
-        speed += ((state.speed || 0)-speed)*(1-Math.exp(-dt*14));
-        const time = state.time || 0, charge = Math.max(0,Math.min(1,state.charge ?? 1));
+        const time = state.time || 0;
         const values = [String(ladybugs).padStart(3,'0'),String(beetles).padStart(3,'0'),`${Math.round(state.distance || 0).toLocaleString()} m`,
-            `${String(Math.floor(time/60)).padStart(2,'0')}:${(time%60).toFixed(1).padStart(4,'0')}`,`${String(Math.round(speed)).padStart(3,'0')} <small>km/h</small>`,`${Math.round(charge*100)}%`];
+            `${String(Math.floor(time/60)).padStart(2,'0')}:${(time%60).toFixed(1).padStart(4,'0')}`,`${String(Math.round(speed)).padStart(3,'0')} <small>km/h</small>`,`${Math.round(shownCharge*100)}%`];
         fields.forEach((id,i)=>{ if(find(id).innerHTML!==values[i]) find(id).innerHTML=values[i]; });
         find('race-pause').lastElementChild.textContent=state.paused?'RESUME':'PAUSE';
         find('race-pause').setAttribute('aria-label',state.paused?'Resume':'Pause');
         find('race-toast').classList.toggle('show',now<toastUntil);
-        find('race-arc').style.setProperty('--p',Math.min(1,speed/300).toFixed(3));
-        find('race-fill').style.setProperty('--c',(Math.ceil(charge*8)/8).toFixed(3));
         const knob=find('mobile-knob'); if(knob) knob.style.transform=`translate(${state.steer*85}%,${(state.brake-state.throttle)*85}%)`;
     }
     window.__velocityHud = {toast}; requestAnimationFrame(frame);
@@ -591,7 +595,9 @@ const engine = new Engine(GODOT_CONFIG);
     if (window.__velocityLeaderboard || !window.__velocityMobile || !document.body) return;
     const state = window.__velocityMobile.state;
     const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
-    const remote = /^(https:\/\/|http:\/\/(127\.0\.0\.1|localhost)[:/])\S*$/.test(base);
+    const validBase = /^(https:\/\/|http:\/\/(127\.0\.0\.1|localhost)[:/])\S*$/.test(base);
+    // Local development builds never talk to the production board (the Worker only allows the real site's origin).
+    const remote = validBase && (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /^http:\/\/(127\.0\.0\.1|localhost)[:/]/.test(base));
     const NAME = /^[\p{L}\p{N} _.\-]{1,16}$/u;
     const clean = value => value.normalize('NFKC').replace(/\s+/g, ' ').trim();
     const find = id => document.getElementById(id);
@@ -637,7 +643,7 @@ const engine = new Engine(GODOT_CONFIG);
     input.value = store.get('velocity.name', '');
     for (const type of ['keydown', 'keyup', 'keypress']) panel.addEventListener(type, e => e.stopPropagation());
 
-    let token = null, tokenPending = false, lastTime = 0, submitted = false, busy = false, mine = null;
+    let nextTokenTry = 0, token = null, tokenPending = false, lastTime = 0, submitted = false, busy = false, mine = null;
     const validName = () => NAME.test(clean(input.value));
     const refreshSubmit = () => { submit.disabled = busy || submitted || !validName(); };
     input.addEventListener('input', () => { refreshSubmit(); if (!submitted) msg.textContent = ''; });
@@ -650,10 +656,11 @@ const engine = new Engine(GODOT_CONFIG);
         try { render(remote ? (await request('/top?limit=10')).top : local.top(), mine); }
         catch { msg.textContent = 'Couldn’t load the leaderboard.'; render(local.top(), mine); }
     }
-    async function startToken() {
-        if (!remote || token || tokenPending) return;
+    async function startToken(force = false) {
+        if (!remote || token || tokenPending || (!force && performance.now() < nextTokenTry)) return;
         tokenPending = true;
-        try { token = (await request('/run', {method: 'POST', body: '{}'})).token; } catch { token = null; }
+        try { token = (await request('/run', {method: 'POST', body: '{}'})).token; }
+        catch { token = null; nextTokenTry = performance.now() + 20000; }  // back off instead of retrying every tick
         tokenPending = false;
     }
     function open() {
@@ -674,7 +681,7 @@ const engine = new Engine(GODOT_CONFIG);
         const entry = {name, time: Math.round(state.time * 1000) / 1000, ladybugs: state.ladybugs || 0, beetles: state.beetles || 0};
         busy = true; refreshSubmit(); msg.textContent = 'Submitting…';
         try {
-            if (remote && !token) await startToken();
+            if (remote && !token) await startToken(true);
             const data = remote ? await request('/score', {method: 'POST', body: JSON.stringify({...entry, token})}) : local.add(entry);
             if (remote) token = null;
             store.set('velocity.name', name);
@@ -728,8 +735,8 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=9cabe80d02449564",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=9cabe80d02449564" : name, size])),
+			'mainPack': "index.pck?build=e856c929dcaeb658",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=e856c929dcaeb658" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

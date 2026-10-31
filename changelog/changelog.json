@@ -1,5 +1,12 @@
 [
  {
+  "version": 34,
+  "commit": "5146633",
+  "date": "2026-10-31",
+  "subject": "Make the fire trail read as burnt ground with separate flames instead of lava and a beam",
+  "body": ""
+ },
+ {
   "version": 33,
   "commit": "1180c8c",
   "date": "2026-10-31",

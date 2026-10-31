@@ -1,5 +1,19 @@
 [
  {
+  "version": 30,
+  "commit": "cbfc258",
+  "date": "2026-10-31",
+  "subject": "Rebuild the fire trail, add boost camera lag and document the water, terrain and streaming work",
+  "body": "- Fire trail: charred ground with glowing cracks, tall noise-carved flame sheets and rising embers; no measurable frame cost.\n- Chase camera trails behind while boosting.\n- Lake views, mountain, streaming and fire measurements recorded."
+ },
+ {
+  "version": 29,
+  "commit": "9924dc7",
+  "date": "2026-10-31",
+  "subject": "Unify water style, fix the enlarged lake, sharpen mountains and stream faster at top speed",
+  "body": "- All water surfaces share the lake's shader; vista ponds and the gorge river use it.\n- First vista moved off the lake basin; lake outline matches its flattened zone; camera near plane tightened.\n- Domain-warped ridged mountain shapes with cooler rock colour.\n- Speed-aware sector lookahead, two parallel downloads and pipelined assembly."
+ },
+ {
   "version": 28,
   "commit": "5196a6c",
   "date": "2026-10-31",

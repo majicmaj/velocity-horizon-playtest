@@ -129,7 +129,7 @@ body {
 #race-meter-alert{position:absolute;left:41.4%;width:36.4%;top:74%;height:15%;border:2px solid #ff3b30;border-radius:7px;transform:skewX(-15deg);box-shadow:0 0 10px #ff3b30,inset 0 0 8px #ff3b3099;opacity:0;pointer-events:none}
 #race-meter-alert.flash{animation:meter-alert .8s ease-out}
 @keyframes meter-alert{0%{opacity:1}25%{opacity:.3}40%{opacity:1}55%{opacity:.3}70%{opacity:1}100%{opacity:0}}
-</style><meta name="velocity-build" content="b3c0877aeb9ece8e"></head>
+</style><meta name="velocity-build" content="6b0a5c8de2aafb85"></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
 			Your browser does not support the canvas tag.
@@ -147,7 +147,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":75318332,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":76799404,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -421,7 +421,7 @@ const engine = new Engine(GODOT_CONFIG);
     api.unlock_audio = unlockAudio;
     // Relative pages work on any host the build is served from; the home link is the public address.
     window.__velocitySiteLinks = '<p class="site-links"><a href="https://vh.hobbyhood.app" target="_blank" rel="noopener">vh.hobbyhood.app</a> · '
-        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v26</span></p>';
+        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v27</span></p>';
     if (!enabled) return;
     const meta = document.querySelector('meta[name=viewport]');
     if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
@@ -624,6 +624,7 @@ const engine = new Engine(GODOT_CONFIG);
     if (window.__velocityLeaderboard || !window.__velocityMobile || !document.body) return;
     const state = window.__velocityMobile.state;
     const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
+    const course = '2';  // the board for the current course layout (see server/leaderboard/course.txt)
     const validBase = /^(https:\/\/|http:\/\/(127\.0\.0\.1|localhost)[:/])\S*$/.test(base);
     // Local development builds never talk to the production board (the Worker only allows the real site's origin).
     const remote = validBase && (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /^http:\/\/(127\.0\.0\.1|localhost)[:/]/.test(base));
@@ -646,15 +647,15 @@ const engine = new Engine(GODOT_CONFIG);
         } finally { clearTimeout(timer); }
     }
     const local = {
-        top: () => store.get('velocity.local', []).slice(0, 10),
+        top: () => store.get('velocity.local.c' + course, []).slice(0, 10),
         add(entry) {
-            const rows = store.get('velocity.local', []), key = entry.name.toLowerCase();
+            const rows = store.get('velocity.local.c' + course, []), key = entry.name.toLowerCase();
             const index = rows.findIndex(row => row.name.toLowerCase() === key);
             const improved = index < 0 || rows[index].time > entry.time;
             if (index >= 0 && improved) rows.splice(index, 1);
             if (improved) rows.push(entry);
             rows.sort((a, b) => a.time - b.time); rows.length = Math.min(rows.length, 50);
-            store.set('velocity.local', rows);
+            store.set('velocity.local.c' + course, rows);
             return {rank: rows.findIndex(row => row.name.toLowerCase() === key) + 1, improved, top: rows.slice(0, 10)};
         },
     };
@@ -683,7 +684,7 @@ const engine = new Engine(GODOT_CONFIG);
             : '<li class="empty">No times yet — be the first.</li>';
     }
     async function loadTop() {
-        try { render(remote ? (await request('/top?limit=10')).top : local.top(), mine); }
+        try { render(remote ? (await request('/top?limit=10&course=' + course)).top : local.top(), mine); }
         catch { msg.textContent = 'Couldn’t load the leaderboard.'; render(local.top(), mine); }
     }
     async function startToken(force = false) {
@@ -728,7 +729,7 @@ const engine = new Engine(GODOT_CONFIG);
         busy = true; refreshSubmit(); msg.textContent = 'Submitting…';
         try {
             if (remote && !token) await startToken(true);
-            const data = remote ? await request('/score', {method: 'POST', body: JSON.stringify({...entry, token})}) : local.add(entry);
+            const data = remote ? await request('/score', {method: 'POST', body: JSON.stringify({...entry, course, token})}) : local.add(entry);
             if (remote) token = null;
             store.set('velocity.name', name);
             submitted = true; mine = name; input.disabled = true; submit.hidden = true;
@@ -781,8 +782,8 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=b3c0877aeb9ece8e",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=b3c0877aeb9ece8e" : name, size])),
+			'mainPack': "index.pck?build=6b0a5c8de2aafb85",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=6b0a5c8de2aafb85" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

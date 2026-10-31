@@ -1,5 +1,12 @@
 [
  {
+  "version": 27,
+  "commit": "8c1cf8c",
+  "date": "2026-10-31",
+  "subject": "Double the mountain pass with a steeper drop, add slope speed, and keep a leaderboard per course",
+  "body": "- Pass is 3 km: 1.6 km winding climb to an 884 m crest, then a 1 km drop at 41 degrees; the rest of the course moves 1.6 km down (12.8 km total).\n- Uphill slightly slows and downhill adds speed, even past top speed.\n- Scenic side camera moves to the flat crest; chase camera frames the steep drop.\n- Leaderboard boards are per course; the old 11.2 km course keeps its times."
+ },
+ {
   "version": 26,
   "commit": "2f61845",
   "date": "2026-10-31",

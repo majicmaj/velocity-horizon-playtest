@@ -1,5 +1,12 @@
 [
  {
+  "version": 33,
+  "commit": "1180c8c",
+  "date": "2026-10-31",
+  "subject": "Make boost a reward: the meter buys speed, boost jump is the 33% jolt, slower refill, real gravity and quadratic drag",
+  "body": ""
+ },
+ {
   "version": 32,
   "commit": "0bb3f6d",
   "date": "2026-10-31",

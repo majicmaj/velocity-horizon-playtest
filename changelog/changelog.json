@@ -1,0 +1,149 @@
+[
+ {
+  "version": 21,
+  "commit": "f927446",
+  "date": "2026-10-31",
+  "subject": "Stop tracking Wrangler's local cache",
+  "body": ""
+ },
+ {
+  "version": 20,
+  "commit": "c43af11",
+  "date": "2026-10-31",
+  "subject": "Start the run clock on first movement, reset fully on restart, add menu leaderboard and the vh.hobbyhood.app site",
+  "body": "- Clock waits for the runner to move; restart clears clock, jump, pose and speed effects.\n- Esc/Controls menus (desktop and phone) open the leaderboard and show site links and version.\n- /leaderboard and /changelog pages are published with the game; a version is a commit.\n- Cloudflare Worker proxy serves the game, leaderboard and changelog at vh.hobbyhood.app."
+ },
+ {
+  "version": 19,
+  "commit": "6ae171e",
+  "date": "2026-10-31",
+  "subject": "Add boost jolt, larger lake, forward-leading water camera, red trajectory speed effects and quicker steering",
+  "body": "- Boost press fires a distorting shockwave jolt that tapers into normal boost,\n  weaker when already fast, with extra charge cost, FOV kick and forward lean.\n- Lake is 46% longer and wider with the route's flat-water stretch extended;\n  water-section camera is zoomed out and looks ahead.\n- Fire dome, boost shell and red streaks follow the real trajectory; motion blur\n  scales with speed and slope; synthesized boom, jolt and wind sounds.\n- Fast turning when slow or stopped; action grid reordered with spacing;\n  boost meter eases between engine samples.\n- Leaderboard client backs off on failure and ignores the production board on localhost."
+ },
+ {
+  "version": 18,
+  "commit": "7313b00",
+  "date": "2026-10-31",
+  "subject": "Point the game at the deployed leaderboard Worker",
+  "body": ""
+ },
+ {
+  "version": 17,
+  "commit": "9a2e80d",
+  "date": "2026-10-31",
+  "subject": "Add end-of-run leaderboard, portrait support, rope-bridge gorges and layered rock",
+  "body": "- Cloudflare Worker + KV leaderboard with signed run tokens; client falls back to\n  device-only times until server/leaderboard/url.txt is set.\n- Tall windows and portrait phones get a matching canvas shape and widened camera FOV.\n- First crossing uses the rope-bridge asset; all three get river, boulders and rock faces.\n- Shared rock_finish() adds strata, crevices and streaks to terrain and mountains.\n- Triangle guard now per crossing; measurements recorded in docs."
+ },
+ {
+  "version": 16,
+  "commit": "2fb3bb1",
+  "date": "2026-10-31",
+  "subject": "Ship blue/orange HUD skin with tilt, fullscreen, pickup and bridge updates",
+  "body": "Cut the user-supplied blue/orange sheet into a transparent atlas and\nunlit/lit gauge layers; speed arc and boost segments light from live state."
+ },
+ {
+  "version": 15,
+  "commit": "5964254",
+  "date": "2026-10-30",
+  "subject": "Record verified mobile web publication",
+  "body": ""
+ },
+ {
+  "version": 14,
+  "commit": "ec6917b",
+  "date": "2026-10-30",
+  "subject": "Ship calibrated phone tilt controls with multitouch fallback",
+  "body": ""
+ },
+ {
+  "version": 13,
+  "commit": "1234d63",
+  "date": "2026-10-30",
+  "subject": "Record final waterfall presentation and public release verification",
+  "body": ""
+ },
+ {
+  "version": 12,
+  "commit": "fbfa996",
+  "date": "2026-10-30",
+  "subject": "Remaster waterfall transparency, grounded portal and cave depth",
+  "body": ""
+ },
+ {
+  "version": 11,
+  "commit": "afac548",
+  "date": "2026-10-30",
+  "subject": "Eliminate mountain layer Z fighting and stippled seams",
+  "body": ""
+ },
+ {
+  "version": 10,
+  "commit": "46e41d3",
+  "date": "2026-10-30",
+  "subject": "Retune 300 km/h boost, camera and waterfall cave",
+  "body": ""
+ },
+ {
+  "version": 9,
+  "commit": "6cdebb1",
+  "date": "2026-10-30",
+  "subject": "Add glowing insect collectible rows with pooled feedback and chimes",
+  "body": ""
+ },
+ {
+  "version": 8,
+  "commit": "fa26f96",
+  "date": "2026-10-30",
+  "subject": "Replace lake wake strips with connected rolling water geometry",
+  "body": ""
+ },
+ {
+  "version": 7,
+  "commit": "e57eeaa",
+  "date": "2026-10-30",
+  "subject": "Add rechargeable boost and speed-sensitive individual prop impacts",
+  "body": ""
+ },
+ {
+  "version": 6,
+  "commit": "9b96666",
+  "date": "2026-10-30",
+  "subject": "Add winding mountain climb and long steep descent",
+  "body": ""
+ },
+ {
+  "version": 5,
+  "commit": "e87b34c",
+  "date": "2026-10-30",
+  "subject": "Fix incline jumps and grade-following camera; add bounded ultrawide support",
+  "body": ""
+ },
+ {
+  "version": 4,
+  "commit": "f540ecd",
+  "date": "2026-10-30",
+  "subject": "Enrich hillside cover, preserve tree canopies and refine off-route geology",
+  "body": ""
+ },
+ {
+  "version": 3,
+  "commit": "89631c2",
+  "date": "2026-10-30",
+  "subject": "Place review captures on actual bridge decks and terrain",
+  "body": ""
+ },
+ {
+  "version": 2,
+  "commit": "d4da539",
+  "date": "2026-10-30",
+  "subject": "Ground scenery and add layered mountain, bridge and cave environments",
+  "body": "Use mesh-derived trunk and rock collision, actual terrain support, shared detiled terrain materials and supplied parallax mountain layers. Replace the hanging crossing with an optimized CC0 suspension bridge over a shared river channel; add a solid waterfall tunnel.\n\nPreserve bounded streaming and tree LODs, hold benchmark teleports until neighboring terrain is ready, record build timings, and guard publication against changing the browser-tested pack.\n\nValidation: full structural suite and complete route traversal; final fresh local gate/export in 106.8s; focused 1080p Chrome/RTX3060Ti bridge and lake checks near100FPS without loading waits or frames over50ms; public artifact hashes verified."
+ },
+ {
+  "version": 1,
+  "commit": "7b3d152",
+  "date": "2026-10-30",
+  "subject": "Import current speed platformer source and documentation",
+  "body": ""
+ }
+]

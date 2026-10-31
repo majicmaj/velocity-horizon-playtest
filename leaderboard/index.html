@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Leaderboard · Velocity Horizon</title>
+<style>
+:root{color-scheme:dark}*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% -20%,#12306a,#050b1c 60%);color:#e8f4ff;font:16px/1.4 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:640px;margin:0 auto;padding:32px 16px 48px}
+h1{margin:0 0 4px;font-size:28px;letter-spacing:.04em;font-style:italic}p.sub{margin:0 0 20px;color:#8fb8e8}
+nav{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}nav a{color:#9fd2ff;text-decoration:none;border-bottom:1px solid #2f8fff55}nav a.play{color:#fff;background:linear-gradient(#0f3f86,#0a2760);border:1px solid #3aa0ff;border-radius:10px;padding:8px 16px;font-style:italic;font-weight:700}
+ol{list-style:none;margin:0;padding:0;border:1px solid #2f8fff66;border-radius:14px;overflow:hidden;background:#06122bcc}
+li{display:grid;grid-template-columns:3em 1fr auto auto;gap:10px;padding:10px 14px;align-items:center}li:nth-child(odd){background:#0a1f4a80}
+li .n{color:#6fb4ff}li .who{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}li .t{font-variant-numeric:tabular-nums;font-weight:700}li .b{color:#8fb8e8;font-size:13px}
+li:nth-child(-n+3) .n{color:#ffd08a;font-weight:700}
+#note{margin:14px 2px;color:#ffd08a;min-height:1.4em}footer{margin-top:26px;font-size:13px;color:#6f93c4}
+@media(max-width:480px){li{grid-template-columns:2.4em 1fr auto}li .b{display:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>Leaderboard</h1>
+<p class="sub">Fastest finishes, all players.</p>
+<nav><a class="play" href="../">Play</a><a href="../changelog/">Changelog</a></nav>
+<ol id="list" aria-live="polite"></ol>
+<p id="note">Loading…</p>
+<footer>Times come from players' browsers and are lightly checked, not tamper-proof. <span id="stamp"></span></footer>
+</main>
+<script>
+const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
+const list = document.getElementById('list'), note = document.getElementById('note');
+const fmt = s => `${String(Math.floor(s / 60)).padStart(2, '0')}:${(s % 60).toFixed(2).padStart(5, '0')}`;
+const esc = t => t.replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+async function load() {
+  if (!base) { note.textContent = 'The shared leaderboard is not connected.'; return; }
+  try {
+    const response = await fetch(base + '/top?limit=50');
+    if (!response.ok) throw new Error(response.status);
+    const {top} = await response.json();
+    list.innerHTML = top.map((r, i) => `<li><span class="n">${i + 1}</span><span class="who">${esc(r.name)}</span><span class="t">${fmt(r.time)}</span><span class="b">${r.ladybugs} 🐞 ${r.beetles} 🪲</span></li>`).join('');
+    note.textContent = top.length ? '' : 'No times yet. Be the first!';
+    document.getElementById('stamp').textContent = 'Updated ' + new Date().toLocaleTimeString();
+  } catch (error) { note.textContent = 'Couldn’t load the leaderboard. Try again in a moment.'; }
+}
+load(); setInterval(load, 60000);
+</script>
+</body>
+</html>

@@ -91,7 +91,7 @@ body {
 }
 		</style>
 		<link rel='icon' href='index.png'><style>#canvas { width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); margin: auto; position: absolute; inset: 0; }</style>
-	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=afa6cb2ee86a') format('truetype');font-display:swap}
+	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=3e42fa260784') format('truetype');font-display:swap}
 #race-hud,#mobile-ui{--side:clamp(76px,17vh,172px)}
 #mobile-knob{background:none!important;box-shadow:none!important}
 #race-hud{position:fixed;inset:0;z-index:18;pointer-events:none;color:#f2f8ff;font-family:Velocity,system-ui,sans-serif;font-weight:700;font-style:italic;--side:clamp(76px,17vh,172px);--tab:clamp(110px,20vw,250px);--dial:clamp(300px,52vw,760px);text-shadow:0 2px 3px #000,0 0 7px #1f86ff}
@@ -120,7 +120,13 @@ body {
 #lb-submit[hidden]{display:none}#lb-msg{min-height:22px;margin:8px 0 2px;font-size:14px;color:#ffd08a}#lb h3{margin:6px 0;font-size:13px;letter-spacing:.14em;color:#6fb4ff}
 #lb-list{list-style:none;margin:0 0 12px;padding:0;text-align:left;font-size:17px}#lb-list li{display:grid;grid-template-columns:2em 1fr auto;gap:6px;padding:4px 8px;border-radius:6px}#lb-list li:nth-child(odd){background:#0a1f4a80}#lb-list li.me{background:#1c5fd0;color:#fff;box-shadow:0 0 10px #3aa0ff99}#lb-list .n{color:#6fb4ff}#lb-list .who{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#lb-list .t{font-variant-numeric:tabular-nums}#lb-list .empty{display:block;color:#9fd2ff;text-align:center}
 @media (max-height:430px){#lb .lb-card{padding:10px 14px}#lb h2{font-size:16px}#lb-time{font-size:34px}#lb-sub{margin-bottom:6px}#lb-list{font-size:14px}#lb-list li{padding:2px 8px}#lb-list li:nth-child(n+6){display:none}}
-</style><meta name="velocity-build" content="e856c929dcaeb658"></head>
+#race-menu{position:fixed;inset:0;z-index:25;display:flex;align-items:center;justify-content:center;background:#030a1cb3;pointer-events:auto}#race-menu[hidden]{display:none}
+.race-menu-card{width:min(420px,92vw);padding:20px 22px;border:2px solid #2f8fff;border-radius:16px;background:linear-gradient(160deg,#071a3a,#04102a);box-shadow:0 0 28px #1c7dff66;text-align:center;text-shadow:none}
+.race-menu-card h2{margin:0 0 10px;font-size:24px;letter-spacing:.14em;color:#9fd2ff;font-style:italic}.race-keys{list-style:none;margin:0 0 14px;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;text-align:left;font-size:15px;color:#cfe6ff}.race-keys b{color:#fff;margin-right:6px}
+.race-menu-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.race-menu-actions button,#lb-close{min-height:48px;padding:6px 16px;border:1px solid #3aa0ff;border-radius:10px;background:linear-gradient(#0f3f86,#0a2760);color:#fff;font:italic 700 17px Velocity,system-ui,sans-serif;letter-spacing:.06em;cursor:pointer}.race-menu-actions button:active,#lb-close:active{filter:brightness(1.3)}
+.site-links{margin:14px 0 4px;font-size:13px;color:#8fb8e8;font-style:normal}.site-links a{color:#9fd2ff}.site-version{opacity:.7;margin-left:4px}
+#lb[data-mode=view] #lb-time,#lb[data-mode=view] #lb-sub,#lb[data-mode=view] #lb-form,#lb[data-mode=view] #lb-again{display:none}#lb[data-mode=finish] #lb-close{display:none}#lb .lb-page{margin:10px 0 0;font-size:13px}#lb .lb-page a{color:#9fd2ff}
+</style><meta name="velocity-build" content="8f0b6f7689ba9354"></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
 			Your browser does not support the canvas tag.
@@ -138,7 +144,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":75305108,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":75306116,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -410,6 +416,9 @@ const engine = new Engine(GODOT_CONFIG);
         if (api.start_audio) api.start_audio();
     }
     api.unlock_audio = unlockAudio;
+    // Relative pages work on any host the build is served from; the home link is the public address.
+    window.__velocitySiteLinks = '<p class="site-links"><a href="https://vh.hobbyhood.app" target="_blank" rel="noopener">vh.hobbyhood.app</a> · '
+        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v21</span></p>';
     if (!enabled) return;
     const meta = document.querySelector('meta[name=viewport]');
     if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
@@ -428,8 +437,8 @@ const engine = new Engine(GODOT_CONFIG);
     <div id="mobile-actions"><button data-action="jump">Jump</button><button data-action="boost">Boost</button><button data-action="drift">Drift</button><button data-action="reverse">Reverse</button></div>
     <div id="mobile-menu"><div id="mobile-panel"><h2>Phone controls</h2><p>Landscape recommended. Tilt forward to run, left/right to steer, back to brake. A quick upward flick jumps.</p>
     <p>Hold the phone at your comfortable playing angle when calibrating. Touch Jump is always available.</p><p id="mobile-status" role="status" aria-live="polite">Choose tilt or touch controls.</p>
-    <div class="choices"><button id="mobile-tilt">Enable tilt / Recenter</button><button id="mobile-touch">Use touch</button><button id="mobile-resume">Resume</button><button id="mobile-restart">Restart run</button></div>
-    <label><input id="mobile-invert-steer" type="checkbox"> Invert steering</label><label><input id="mobile-invert-tilt" type="checkbox"> Invert forward / back</label></div></div>`;
+    <div class="choices"><button id="mobile-tilt">Enable tilt / Recenter</button><button id="mobile-touch">Use touch</button><button id="mobile-resume">Resume</button><button id="mobile-restart">Restart run</button><button id="mobile-board">Leaderboard</button></div>
+    ${window.__velocitySiteLinks}<label><input id="mobile-invert-steer" type="checkbox"> Invert steering</label><label><input id="mobile-invert-tilt" type="checkbox"> Invert forward / back</label></div></div>`;
     document.body.appendChild(ui);
     const find = id => document.getElementById(id), menu = find('mobile-menu'), status = find('mobile-status');
     function openMenu() { pause(true); menu.hidden = false; find('mobile-pause').textContent = 'Resume'; }
@@ -439,6 +448,7 @@ const engine = new Engine(GODOT_CONFIG);
     find('mobile-resume').onclick = play;
     find('mobile-touch').onclick = () => { core.mode = 'touch'; core.calibrated = false; core.message = 'Touch controls'; play(); };
     find('mobile-restart').onclick = () => { state.restart_serial++; play(); };
+    find('mobile-board').onclick = () => window.__velocityLeaderboard?.view();
     find('mobile-invert-steer').onchange = e => { core.invertSteer = e.target.checked; };
     find('mobile-invert-tilt').onchange = e => { core.invertTilt = e.target.checked; };
     const angle = () => screen.orientation?.angle ?? window.orientation ?? 0;
@@ -507,16 +517,19 @@ const engine = new Engine(GODOT_CONFIG);
         stick:[0,0,365,365],boost:[369,0,246,237],jump:[619,0,190,184],drift:[813,0,187,182],reverse:[1004,0,193,180],
         knob:[1201,0,112,112],pause:[0,369,270,97],controls:[274,369,320,93],bar:[0,470,1155,90]
     };
-    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=afa6cb2ee86a" alt=""></span>`;
+    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=3e42fa260784" alt=""></span>`;
     function art(name) {
         const [x,y,w,h] = regions[name];
-        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=afa6cb2ee86a" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
+        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=3e42fa260784" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
     }
     const hud = document.createElement('div'); hud.id = 'race-hud'; hud.hidden = true;
     hud.innerHTML = `<button id="race-controls" class="race-tab" aria-label="Controls">${art('controls')}<span>CONTROLS</span></button>
         <div id="race-top">${art('bar')}<div id="race-values"><div><b id="race-ladybugs">000</b><small>LADYBUGS</small></div><div><b id="race-beetles">000</b><small>BEETLES</small></div><div><b id="race-distance">0 m</b><small>DISTANCE</small></div><div><b id="race-time">00:00</b><small>TIME</small></div></div></div>
         <button id="race-pause" class="race-tab" aria-label="Pause">${art('pause')}<span>PAUSE</span></button>
         <button id="race-fullscreen" aria-label="Fullscreen" title="Fullscreen">⛶</button><div id="race-toast" role="status"></div>
+        <div id="race-menu" hidden><div class="race-menu-card" role="dialog" aria-label="Paused"><h2>PAUSED</h2>
+            <ul class="race-keys"><li><b>W / ↑</b> run</li><li><b>S / ↓</b> brake · reverse</li><li><b>A D / ← →</b> steer</li><li><b>Space</b> jump</li><li><b>Shift</b> boost</li><li><b>Ctrl</b> drift</li><li><b>R</b> restart</li><li><b>M</b> mute</li><li><b>Esc</b> resume</li></ul>
+            <div class="race-menu-actions"><button id="race-menu-resume">Resume</button><button id="race-menu-restart">Restart run</button><button id="race-menu-board">Leaderboard</button></div>${window.__velocitySiteLinks || ''}</div></div>
         <div id="race-dial">${layer('hud-dial.png')}${layer('hud-dial-fill.png','race-arc')}${layer('hud-dial-fill.png','race-fill')}<div id="race-speed">000 <small>km/h</small></div><div id="race-charge" aria-label="Boost">100%</div></div>`;
     document.body.appendChild(hud);
     const find = id => document.getElementById(id);
@@ -525,8 +538,12 @@ const engine = new Engine(GODOT_CONFIG);
     function pause(value) { state.paused=value; state.pause_serial++; }
     find('race-controls').onclick = () => {
         if (state.enabled) find('mobile-settings').click();
-        else { pause(true); toast('W / arrows drive · Ctrl drift · Shift boost · Space jump · Esc resumes'); }
+        else { mobile.unlock_audio?.(); pause(true); }
     };
+    const resume = () => { pause(false); document.getElementById('canvas')?.focus(); };
+    find('race-menu-resume').onclick = resume;
+    find('race-menu-restart').onclick = () => { state.restart_serial++; resume(); };
+    find('race-menu-board').onclick = () => window.__velocityLeaderboard?.view();
     find('race-pause').onclick = () => {
         if (state.enabled) find('mobile-pause').click();
         else { mobile.unlock_audio?.(); pause(!state.paused); }
@@ -583,6 +600,7 @@ const engine = new Engine(GODOT_CONFIG);
         const values = [String(ladybugs).padStart(3,'0'),String(beetles).padStart(3,'0'),`${Math.round(state.distance || 0).toLocaleString()} m`,
             `${String(Math.floor(time/60)).padStart(2,'0')}:${(time%60).toFixed(1).padStart(4,'0')}`,`${String(Math.round(speed)).padStart(3,'0')} <small>km/h</small>`,`${Math.round(shownCharge*100)}%`];
         fields.forEach((id,i)=>{ if(find(id).innerHTML!==values[i]) find(id).innerHTML=values[i]; });
+        find('race-menu').hidden = state.enabled || !state.paused || !!window.__velocityLeaderboard?.isOpen();
         find('race-pause').lastElementChild.textContent=state.paused?'RESUME':'PAUSE';
         find('race-pause').setAttribute('aria-label',state.paused?'Resume':'Pause');
         find('race-toast').classList.toggle('show',now<toastUntil);
@@ -637,7 +655,8 @@ const engine = new Engine(GODOT_CONFIG);
         <form id="lb-form" autocomplete="off"><input id="lb-name" maxlength="16" placeholder="Your name" autocomplete="nickname" autocapitalize="words" spellcheck="false" aria-label="Your name" required><button id="lb-submit" type="submit" disabled>SUBMIT</button></form>
         <p id="lb-msg" role="status" aria-live="polite"></p>
         <h3 id="lb-heading">FASTEST RUNS</h3><ol id="lb-list"></ol>
-        <button id="lb-again" type="button">RACE AGAIN</button></div>`;
+        <button id="lb-again" type="button">RACE AGAIN</button><button id="lb-close" type="button">CLOSE</button>
+        <p class="lb-page"><a href="leaderboard/" target="_blank" rel="noopener">Full leaderboard page</a></p></div>`;
     document.body.appendChild(panel);
     const input = find('lb-name'), submit = find('lb-submit'), msg = find('lb-msg'), list = find('lb-list');
     input.value = store.get('velocity.name', '');
@@ -664,6 +683,8 @@ const engine = new Engine(GODOT_CONFIG);
         tokenPending = false;
     }
     function open() {
+        panel.dataset.mode = 'finish';
+        find('lb-title').textContent = 'RUN COMPLETE';
         submitted = false; busy = false; mine = null;
         find('lb-time').textContent = fmt(state.time);
         find('lb-sub').textContent = `${state.ladybugs || 0} ladybugs · ${state.beetles || 0} beetles`;
@@ -673,7 +694,21 @@ const engine = new Engine(GODOT_CONFIG);
         panel.hidden = false; loadTop();
         setTimeout(() => input.focus({preventScroll: true}), 50);
     }
+    function view() {
+        panel.dataset.mode = 'view';
+        find('lb-title').textContent = 'LEADERBOARD';
+        find('lb-heading').textContent = remote ? 'FASTEST RUNS · ALL PLAYERS' : 'YOUR FASTEST RUNS (THIS DEVICE)';
+        msg.textContent = remote ? '' : 'The shared leaderboard isn’t connected. Times are saved on this device.';
+        mine = store.get('velocity.name', '') || null;
+        panel.hidden = false; loadTop();
+        find('lb-close').focus({preventScroll: true});
+    }
     function close() { panel.hidden = true; input.blur(); }
+    // While the view is open, Esc closes it instead of toggling the game's pause.
+    window.addEventListener('keydown', event => {
+        if (!panel.hidden && panel.dataset.mode === 'view' && event.key === 'Escape') { event.stopPropagation(); event.preventDefault(); close(); }
+    }, true);
+    find('lb-close').onclick = close;
     find('lb-form').addEventListener('submit', async event => {
         event.preventDefault();
         if (!validName() || busy || submitted) return;
@@ -707,7 +742,7 @@ const engine = new Engine(GODOT_CONFIG);
             if (completed) open(); else close();
         }
     }, 100);
-    window.__velocityLeaderboard = {remote, base};
+    window.__velocityLeaderboard = {remote, base, view, isOpen: () => !panel.hidden};
 })();
 
 (() => {
@@ -735,8 +770,8 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=e856c929dcaeb658",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=e856c929dcaeb658" : name, size])),
+			'mainPack': "index.pck?build=8f0b6f7689ba9354",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=8f0b6f7689ba9354" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

@@ -91,7 +91,7 @@ body {
 }
 		</style>
 		<link rel='icon' href='index.png'><style>#canvas { width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); margin: auto; position: absolute; inset: 0; }</style>
-	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=e352ca4f521e') format('truetype');font-display:swap}
+	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=053a43acdbd6') format('truetype');font-display:swap}
 #race-hud,#mobile-ui{--side:clamp(76px,17vh,172px)}
 #mobile-knob{background:none!important;box-shadow:none!important}
 #race-hud{position:fixed;inset:0;z-index:18;pointer-events:none;color:#f2f8ff;font-family:Velocity,system-ui,sans-serif;font-weight:700;font-style:italic;--side:clamp(76px,17vh,172px);--tab:clamp(110px,20vw,250px);--dial:clamp(300px,52vw,760px);text-shadow:0 2px 3px #000,0 0 7px #1f86ff}
@@ -110,9 +110,17 @@ body {
 #mobile-ui{font-family:Velocity,system-ui!important}#mobile-top{display:none!important}#mobile-stick{width:calc(var(--side)*1.75)!important;height:calc(var(--side)*1.75)!important;bottom:max(10px,env(safe-area-inset-bottom))!important;left:max(5px,env(safe-area-inset-left))!important;border:0!important;border-radius:50%;background:none!important;color:transparent;font-size:0!important;overflow:visible;box-sizing:border-box}#mobile-stick .race-art{inset:0}#mobile-knob{position:absolute;width:30.7%;height:30.7%;left:34.65%;top:34.65%;border-radius:50%;filter:drop-shadow(0 0 6px #4aa8ff);pointer-events:none;transition:transform .04s linear}#mobile-knob .race-art{inset:0}
 #mobile-actions{grid-template-columns:repeat(2,var(--side))!important;gap:2px!important;right:calc(max(5px,env(safe-area-inset-right)) + var(--side)*.2)!important;bottom:max(8px,env(safe-area-inset-bottom))!important}#mobile-actions button{width:var(--side);height:var(--side)!important;border:0!important;background:none!important;position:relative;padding:0!important;color:transparent;font-size:0!important;min-height:48px!important;cursor:pointer}#mobile-actions .race-art{inset:-4%}#mobile-actions [data-action=boost] .race-art{inset:auto;left:-4%;bottom:-4%;width:127.7%;height:123%}#mobile-actions [data-action=drift]{order:4}#mobile-actions [data-action=reverse]{order:3}#mobile-actions button:active{filter:brightness(1.35);transform:scale(.96)}
 #mobile-panel{font-style:normal;background:linear-gradient(135deg,#071430,#0b1d3c)!important;border:1px solid #2f8fff;box-shadow:0 0 26px #1c7dff44}#mobile-panel button{font-family:Velocity,system-ui!important;border-color:#2f7fd8!important;background:#0c2247!important}#mobile-panel h2{color:#bfe0ff}
-@media (orientation:portrait){#race-hud,#mobile-ui{--side:clamp(68px,20vw,110px)}#race-hud{--dial:86vw;--tab:40vw}#race-top{width:94vw;top:calc(max(6px,env(safe-area-inset-top)) + 16vw)}#race-toast{top:calc(24vw + 30px)}#race-fullscreen{top:calc(24vw + 40px)}#race-dial{bottom:calc(var(--side)*2 + 16px)}#mobile-stick{bottom:18px!important;width:43vw!important;height:43vw!important}}
+@media (orientation:portrait){#race-hud,#mobile-ui{--side:clamp(68px,20vw,110px)}#race-hud{--dial:min(86vw,560px);--tab:min(40vw,230px)}#race-top{width:min(94vw,680px);top:calc(max(6px,env(safe-area-inset-top)) + var(--tab)*.4)}#race-toast{top:calc(var(--tab)*.4 + 56px + min(94vw,680px)*.08)}#race-fullscreen{top:calc(var(--tab)*.4 + 66px + min(94vw,680px)*.08)}#race-hud.touch #race-dial{bottom:calc(var(--side)*2 + 16px)}#mobile-stick{bottom:18px!important;width:43vw!important;height:43vw!important}}
 @media (min-width:1200px) and (orientation:landscape){#race-hud,#mobile-ui{--side:156px}}
-</style><meta name="velocity-build" content="d944a2fab66bb508"></head>
+#lb{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));background:#030a1ccc;font-family:Velocity,system-ui,sans-serif;font-weight:700;color:#e8f4ff;overflow:auto}#lb[hidden]{display:none}
+#lb .lb-card{width:min(440px,100%);max-height:100%;overflow:auto;box-sizing:border-box;padding:18px 18px 16px;border:2px solid #2f8fff;border-radius:16px;background:linear-gradient(160deg,#071a3a,#04102a);box-shadow:0 0 28px #1c7dff66,inset 0 0 18px #1c7dff33;text-align:center}
+#lb h2{margin:0;font-size:22px;letter-spacing:.12em;color:#9fd2ff;font-style:italic}#lb-time{font-size:clamp(40px,12vw,64px);line-height:1.05;font-style:italic;text-shadow:0 0 14px #1f86ff}#lb-sub{color:#9fd2ff;font-size:15px;margin-bottom:12px}
+#lb-form{display:flex;gap:8px}#lb-name{flex:1;min-width:0;min-height:48px;box-sizing:border-box;padding:6px 12px;border:1px solid #3aa0ff;border-radius:10px;background:#061534;color:#fff;font:700 18px Velocity,system-ui,sans-serif;outline:none}#lb-name:focus{box-shadow:0 0 0 2px #3aa0ff88}
+#lb button{min-height:48px;padding:6px 16px;border:1px solid #3aa0ff;border-radius:10px;background:linear-gradient(#0f3f86,#0a2760);color:#fff;font:italic 700 17px Velocity,system-ui,sans-serif;letter-spacing:.06em;cursor:pointer}#lb button:disabled{opacity:.4;cursor:default}#lb button:not(:disabled):active{filter:brightness(1.3)}
+#lb-submit[hidden]{display:none}#lb-msg{min-height:22px;margin:8px 0 2px;font-size:14px;color:#ffd08a}#lb h3{margin:6px 0;font-size:13px;letter-spacing:.14em;color:#6fb4ff}
+#lb-list{list-style:none;margin:0 0 12px;padding:0;text-align:left;font-size:17px}#lb-list li{display:grid;grid-template-columns:2em 1fr auto;gap:6px;padding:4px 8px;border-radius:6px}#lb-list li:nth-child(odd){background:#0a1f4a80}#lb-list li.me{background:#1c5fd0;color:#fff;box-shadow:0 0 10px #3aa0ff99}#lb-list .n{color:#6fb4ff}#lb-list .who{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#lb-list .t{font-variant-numeric:tabular-nums}#lb-list .empty{display:block;color:#9fd2ff;text-align:center}
+@media (max-height:430px){#lb .lb-card{padding:10px 14px}#lb h2{font-size:16px}#lb-time{font-size:34px}#lb-sub{margin-bottom:6px}#lb-list{font-size:14px}#lb-list li{padding:2px 8px}#lb-list li:nth-child(n+6){display:none}}
+</style><meta name="velocity-build" content="9cabe80d02449564"></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
 			Your browser does not support the canvas tag.
@@ -130,7 +138,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":74918984,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":75365980,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -369,7 +377,7 @@ const engine = new Engine(GODOT_CONFIG);
         (typeof matchMedia === 'function' && matchMedia('(pointer:coarse)').matches && navigator.maxTouchPoints > 0);
     const core = new window.VelocityMotion();
     const state = {enabled, throttle: 0, brake: 0, steer: 0, boost: false, drift: false,
-        reverse: false, jump_serial: 0, pause_serial: 0, restart_serial: 0, paused: enabled, mode: 'touch'};
+        reverse: false, jump_serial: 0, pause_serial: 0, restart_serial: 0, paused: enabled, mode: 'touch', completed: false};
     const held = new Map(); let stick = {x: 0, y: 0}, touchJumps = 0, listening = false, request = 0;
     function clear() { held.clear(); stick = {x: 0, y: 0}; stickPointer = null; core.reset(); }
     function pause(value) { clear(); state.paused = value; state.pause_serial++; }
@@ -499,10 +507,10 @@ const engine = new Engine(GODOT_CONFIG);
         stick:[0,0,365,365],boost:[369,0,246,237],jump:[619,0,190,184],drift:[813,0,187,182],reverse:[1004,0,193,180],
         knob:[1201,0,112,112],pause:[0,369,270,97],controls:[274,369,320,93],bar:[0,470,1155,90]
     };
-    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=e352ca4f521e" alt=""></span>`;
+    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=053a43acdbd6" alt=""></span>`;
     function art(name) {
         const [x,y,w,h] = regions[name];
-        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=e352ca4f521e" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
+        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=053a43acdbd6" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
     }
     const hud = document.createElement('div'); hud.id = 'race-hud'; hud.hidden = true;
     hud.innerHTML = `<button id="race-controls" class="race-tab" aria-label="Controls">${art('controls')}<span>CONTROLS</span></button>
@@ -559,7 +567,7 @@ const engine = new Engine(GODOT_CONFIG);
         if (now-lastTime < 32) return;
         const dt = Math.min((now-lastTime)/1000,0.1); lastTime=now;
         if (!window.__velocityStartup?.state.ready) return;
-        hud.hidden=false; decorate();
+        hud.hidden=false; hud.classList.toggle('touch',!!state.enabled); decorate();
         const ladybugs = state.ladybugs || 0, beetles = state.beetles || 0;
         if (ladybugs > lastLadybugs) toast(`+${ladybugs-lastLadybugs} km/h · LADYBUG`);
         else if (beetles > lastBeetles) toast(`+${beetles-lastBeetles}% BOOST · BEETLE`);
@@ -580,12 +588,128 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 (() => {
+    if (window.__velocityLeaderboard || !window.__velocityMobile || !document.body) return;
+    const state = window.__velocityMobile.state;
+    const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
+    const remote = /^(https:\/\/|http:\/\/(127\.0\.0\.1|localhost)[:/])\S*$/.test(base);
+    const NAME = /^[\p{L}\p{N} _.\-]{1,16}$/u;
+    const clean = value => value.normalize('NFKC').replace(/\s+/g, ' ').trim();
+    const find = id => document.getElementById(id);
+    const fmt = seconds => `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${(seconds % 60).toFixed(2).padStart(5, '0')}`;
+    const esc = text => text.replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+    const store = {
+        get(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } },
+        set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* private mode */ } },
+    };
+    async function request(path, options) {
+        const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 8000);
+        try {
+            const response = await fetch(base + path, {...options, signal: controller.signal, headers: {'Content-Type': 'application/json'}});
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(data.error || `Leaderboard error ${response.status}`);
+            return data;
+        } finally { clearTimeout(timer); }
+    }
+    const local = {
+        top: () => store.get('velocity.local', []).slice(0, 10),
+        add(entry) {
+            const rows = store.get('velocity.local', []), key = entry.name.toLowerCase();
+            const index = rows.findIndex(row => row.name.toLowerCase() === key);
+            const improved = index < 0 || rows[index].time > entry.time;
+            if (index >= 0 && improved) rows.splice(index, 1);
+            if (improved) rows.push(entry);
+            rows.sort((a, b) => a.time - b.time); rows.length = Math.min(rows.length, 50);
+            store.set('velocity.local', rows);
+            return {rank: rows.findIndex(row => row.name.toLowerCase() === key) + 1, improved, top: rows.slice(0, 10)};
+        },
+    };
+
+    const panel = document.createElement('div');
+    panel.id = 'lb'; panel.hidden = true;
+    panel.innerHTML = `<div class="lb-card" role="dialog" aria-modal="true" aria-labelledby="lb-title">
+        <h2 id="lb-title">RUN COMPLETE</h2><div id="lb-time">00:00.00</div><div id="lb-sub"></div>
+        <form id="lb-form" autocomplete="off"><input id="lb-name" maxlength="16" placeholder="Your name" autocomplete="nickname" autocapitalize="words" spellcheck="false" aria-label="Your name" required><button id="lb-submit" type="submit" disabled>SUBMIT</button></form>
+        <p id="lb-msg" role="status" aria-live="polite"></p>
+        <h3 id="lb-heading">FASTEST RUNS</h3><ol id="lb-list"></ol>
+        <button id="lb-again" type="button">RACE AGAIN</button></div>`;
+    document.body.appendChild(panel);
+    const input = find('lb-name'), submit = find('lb-submit'), msg = find('lb-msg'), list = find('lb-list');
+    input.value = store.get('velocity.name', '');
+    for (const type of ['keydown', 'keyup', 'keypress']) panel.addEventListener(type, e => e.stopPropagation());
+
+    let token = null, tokenPending = false, lastTime = 0, submitted = false, busy = false, mine = null;
+    const validName = () => NAME.test(clean(input.value));
+    const refreshSubmit = () => { submit.disabled = busy || submitted || !validName(); };
+    input.addEventListener('input', () => { refreshSubmit(); if (!submitted) msg.textContent = ''; });
+
+    function render(rows, highlight) {
+        list.innerHTML = rows.length ? rows.map((row, i) => `<li${highlight && row.name.toLowerCase() === highlight.toLowerCase() ? ' class="me"' : ''}><span class="n">${i + 1}</span><span class="who">${esc(row.name)}</span><span class="t">${fmt(row.time)}</span></li>`).join('')
+            : '<li class="empty">No times yet — be the first.</li>';
+    }
+    async function loadTop() {
+        try { render(remote ? (await request('/top?limit=10')).top : local.top(), mine); }
+        catch { msg.textContent = 'Couldn’t load the leaderboard.'; render(local.top(), mine); }
+    }
+    async function startToken() {
+        if (!remote || token || tokenPending) return;
+        tokenPending = true;
+        try { token = (await request('/run', {method: 'POST', body: '{}'})).token; } catch { token = null; }
+        tokenPending = false;
+    }
+    function open() {
+        submitted = false; busy = false; mine = null;
+        find('lb-time').textContent = fmt(state.time);
+        find('lb-sub').textContent = `${state.ladybugs || 0} ladybugs · ${state.beetles || 0} beetles`;
+        find('lb-heading').textContent = remote ? 'FASTEST RUNS · ALL PLAYERS' : 'YOUR FASTEST RUNS (THIS DEVICE)';
+        msg.textContent = remote ? '' : 'The shared leaderboard isn’t connected yet. Times are saved on this device.';
+        input.disabled = false; submit.hidden = false; refreshSubmit();
+        panel.hidden = false; loadTop();
+        setTimeout(() => input.focus({preventScroll: true}), 50);
+    }
+    function close() { panel.hidden = true; input.blur(); }
+    find('lb-form').addEventListener('submit', async event => {
+        event.preventDefault();
+        if (!validName() || busy || submitted) return;
+        const name = clean(input.value);
+        const entry = {name, time: Math.round(state.time * 1000) / 1000, ladybugs: state.ladybugs || 0, beetles: state.beetles || 0};
+        busy = true; refreshSubmit(); msg.textContent = 'Submitting…';
+        try {
+            if (remote && !token) await startToken();
+            const data = remote ? await request('/score', {method: 'POST', body: JSON.stringify({...entry, token})}) : local.add(entry);
+            if (remote) token = null;
+            store.set('velocity.name', name);
+            submitted = true; mine = name; input.disabled = true; submit.hidden = true;
+            msg.textContent = data.improved === false ? `Your best is still ahead of this run — rank #${data.rank}.` : `You’re #${data.rank}${remote ? '' : ' on this device'}!`;
+            render(data.top, name);
+        } catch (error) {
+            msg.textContent = error.name === 'AbortError' ? 'The leaderboard timed out. Try again.' : `${error.message || 'Couldn’t submit.'} Try again.`;
+        }
+        busy = false; refreshSubmit();
+    });
+    find('lb-again').onclick = () => { close(); state.restart_serial++; };
+
+    let completed = false;
+    setInterval(() => {
+        if (!window.__velocityStartup?.state.ready) return;
+        const time = state.time || 0;
+        if (time < lastTime - 0.5) token = null;
+        lastTime = time;
+        if (!state.completed && time > 1) startToken();
+        if (!!state.completed !== completed) {
+            completed = !!state.completed;
+            if (completed) open(); else close();
+        }
+    }, 100);
+    window.__velocityLeaderboard = {remote, base};
+})();
+
+(() => {
     const canvas = document.getElementById('canvas');
     let timer = null;
     const state = {width: 1920, height: 1080};
     function apply(force = false) {
         const mobile = window.__velocityMobile?.state.enabled;
-        const aspect = Math.max(mobile ? 0.5 : 16 / 9, Math.min(mobile ? 2.4 : 32 / 9, innerWidth / Math.max(innerHeight, 1)));
+        const aspect = Math.max(0.42, Math.min(mobile ? 2.4 : 32 / 9, innerWidth / Math.max(innerHeight, 1)));
         const height = Math.min(innerHeight, innerWidth / aspect);
         canvas.style.width = `${height * aspect}px`;
         canvas.style.height = `${height}px`;
@@ -604,8 +728,8 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=d944a2fab66bb508",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=d944a2fab66bb508" : name, size])),
+			'mainPack': "index.pck?build=9cabe80d02449564",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=9cabe80d02449564" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

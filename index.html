@@ -91,7 +91,7 @@ body {
 }
 		</style>
 		<link rel='icon' href='index.png'><style>#canvas { width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); margin: auto; position: absolute; inset: 0; }</style>
-	<meta name="velocity-build" content="2b213129454ac964"></head>
+	<meta name="velocity-build" content="89b0f342adda62e1"></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
 			Your browser does not support the canvas tag.
@@ -109,7 +109,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":74714444,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":74717480,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -255,17 +255,235 @@ const engine = new Engine(GODOT_CONFIG);
 	} else {
 		startup.engineProgress(0, 0);
 	(() => {
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    const delta = (a, b) => ((a - b + 540) % 360) - 180;
+    class Motion {
+        constructor() {
+            this.mode = 'touch'; this.calibrated = false; this.calibrating = false;
+            this.throttle = 0; this.brake = 0; this.steer = 0; this.jumpSerial = 0;
+            this.lastOrientation = -Infinity; this.lastMotion = -Infinity;
+            this.jumpTime = -Infinity; this.armed = true; this.candidate = null;
+            this.gravity = [0, 0, 9.81]; this.samples = []; this.angle = 0;
+            this.pitch = 0; this.roll = 0; this.basePitch = 0; this.baseRoll = 0;
+            this.invertSteer = false; this.invertTilt = false; this.message = 'Touch controls';
+        }
+        reset() { this.throttle = this.brake = this.steer = 0; this.candidate = null; }
+        calibrate(now) {
+            this.reset(); this.mode = 'tilt'; this.calibrated = false;
+            this.calibrating = true; this.started = now; this.samples = [];
+            this.message = 'Hold comfortably and still for one second';
+        }
+        orientation(beta, gamma, angle, now) {
+            if (![beta, gamma, angle].every(Number.isFinite)) return;
+            if (this.angle !== angle) {
+                this.angle = angle;
+                if (this.mode === 'tilt') { this.calibrated = false; this.calibrating = false; this.reset(); this.message = 'Screen rotated — tap Recenter'; }
+            }
+            const b = beta * Math.PI / 180, g = gamma * Math.PI / 180, r = angle * Math.PI / 180;
+            const x = -Math.cos(b) * Math.sin(g), y = Math.sin(b), z = Math.cos(b) * Math.cos(g);
+            const sx = x * Math.cos(r) + y * Math.sin(r), sy = -x * Math.sin(r) + y * Math.cos(r);
+            const pitch = Math.atan2(sy, z) * 180 / Math.PI;
+            const roll = Math.atan2(sx, Math.hypot(sy, z)) * 180 / Math.PI;
+            const k = 1 - Math.exp(-clamp((now - this.lastOrientation) / 1000, 0.001, 0.25) / 0.09);
+            this.pitch += delta(pitch, this.pitch) * k; this.roll += (roll - this.roll) * k;
+            this.lastOrientation = now;
+            if (this.calibrating) {
+                const first = this.samples[0];
+                if (first && (Math.abs(delta(pitch, first.pitch)) > 2 || Math.abs(roll - first.roll) > 2)) this.samples = [];
+                this.samples.push({pitch, roll, now});
+                if (this.samples.length > 180) this.samples.shift();
+                if (this.samples.length >= 8 && now - this.samples[0].now >= 900) {
+                    this.basePitch = this.samples[0].pitch + this.samples.reduce((sum, v) => sum + delta(v.pitch, this.samples[0].pitch), 0) / this.samples.length;
+                    this.baseRoll = this.samples.reduce((sum, v) => sum + v.roll, 0) / this.samples.length;
+                    this.pitch = this.basePitch; this.roll = this.baseRoll;
+                    this.calibrated = true; this.calibrating = false; this.samples = [];
+                    this.message = 'Tilt ready · forward to run, back to brake';
+                }
+            }
+        }
+        motion(acceleration, includingGravity, now) {
+            const valid = a => a && [a.x, a.y, a.z].every(Number.isFinite);
+            if (!valid(acceleration) && !valid(includingGravity)) return;
+            const dt = clamp((now - this.lastMotion) / 1000, 0.001, 0.2);
+            this.lastMotion = now;
+            if (valid(includingGravity)) {
+                const k = 1 - Math.exp(-dt / 0.45);
+                this.gravity = this.gravity.map((v, i) => v + ([includingGravity.x, includingGravity.y, includingGravity.z][i] - v) * k);
+            }
+            const a = valid(acceleration) ? [acceleration.x, acceleration.y, acceleration.z] :
+                [includingGravity.x, includingGravity.y, includingGravity.z].map((v, i) => v - this.gravity[i]);
+            const length = Math.hypot(...this.gravity);
+            if (length < 5 || !this.calibrated || this.mode !== 'tilt') return;
+            const up = a.reduce((sum, v, i) => sum + v * this.gravity[i] / length, 0);
+            if (up < 2 && now - this.jumpTime > 650) this.armed = true;
+            if (this.armed && up > 6 && now - this.jumpTime > 650) {
+                if (this.candidate !== null && now - this.candidate <= 120) {
+                    this.jumpSerial++; this.jumpTime = now; this.armed = false; this.candidate = null;
+                } else this.candidate = now;
+            } else if (up < 2) this.candidate = null;
+        }
+        tick(now) {
+            if (this.calibrating && now - this.started > 5000) {
+                this.calibrating = false; this.mode = 'touch'; this.reset();
+                this.message = 'No steady sensor data — touch controls available';
+            }
+            if (this.mode !== 'tilt' || !this.calibrated) { this.reset(); return; }
+            if (now - Math.max(this.lastOrientation, this.lastMotion) > 1500) {
+                this.calibrated = false; this.mode = 'touch'; this.reset(); this.message = 'Motion stopped — using touch'; return;
+            }
+            if (now - this.jumpTime < 180) return;
+            const axis = v => Math.sign(v) * clamp((Math.abs(v) - 3) / 19, 0, 1);
+            const drive = axis(delta(this.basePitch, this.pitch)) * (this.invertTilt ? -1 : 1);
+            this.throttle = Math.max(0, drive); this.brake = Math.max(0, -drive);
+            this.steer = axis(this.baseRoll - this.roll) * (this.invertSteer ? -1 : 1);
+        }
+    }
+    if (typeof module !== 'undefined') module.exports = Motion;
+    if (typeof window !== 'undefined') window.VelocityMotion = Motion;
+})();
+
+(() => {
+    if (window.__velocityMobile) return;
+    const enabled = new URLSearchParams(window.location?.search || '').get('mobile') === '1' ||
+        (typeof matchMedia === 'function' && matchMedia('(pointer:coarse)').matches && navigator.maxTouchPoints > 0);
+    const core = new window.VelocityMotion();
+    const state = {enabled, throttle: 0, brake: 0, steer: 0, boost: false, drift: false,
+        reverse: false, jump_serial: 0, pause_serial: 0, restart_serial: 0, paused: enabled, mode: 'touch'};
+    const held = new Map(); let stick = {x: 0, y: 0}, touchJumps = 0, listening = false, request = 0;
+    function clear() { held.clear(); stick = {x: 0, y: 0}; stickPointer = null; core.reset(); }
+    function pause(value) { clear(); state.paused = value; state.pause_serial++; }
+    const api = window.__velocityMobile = {state, core, tick() {
+        core.tick(performance.now());
+        const active = new Set(held.values()), tilt = core.mode === 'tilt' && core.calibrated;
+        state.mode = core.mode;
+        state.throttle = Math.max(tilt ? core.throttle : 0, Math.max(0, -stick.y));
+        state.brake = Math.max(tilt ? core.brake : 0, Math.max(0, stick.y), active.has('reverse') ? 1 : 0);
+        state.steer = Math.abs(stick.x) > 0.05 ? stick.x : tilt ? core.steer : 0;
+        state.boost = active.has('boost'); state.drift = active.has('drift'); state.reverse = active.has('reverse');
+        state.jump_serial = touchJumps + core.jumpSerial;
+        if (state.paused) { state.throttle = state.brake = state.steer = 0; state.boost = state.drift = state.reverse = false; }
+    }};
+    if (!enabled) return;
+    const audioContexts = new Set();
+    for (const key of ['AudioContext', 'webkitAudioContext']) {
+        const NativeContext = window[key];
+        if (!NativeContext) continue;
+        try {
+            window[key] = new Proxy(NativeContext, {construct(Target, args, NewTarget) {
+                const context = Reflect.construct(Target, args, NewTarget);
+                audioContexts.add(context); return context;
+            }});
+        } catch (e) { }
+    }
+    function unlockAudio() {
+        for (const context of audioContexts) {
+            if (context.state === 'suspended') context.resume().catch(() => {});
+        }
+        if (api.start_audio) api.start_audio();
+    }
+    const meta = document.querySelector('meta[name=viewport]');
+    if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
+    const style = document.createElement('style');
+    style.textContent = `#mobile-ui{position:fixed;inset:0;z-index:20;pointer-events:none;font:14px system-ui;color:#fff;user-select:none;-webkit-user-select:none}
+    #mobile-ui button,#mobile-ui input,#mobile-stick{pointer-events:auto;touch-action:none}#mobile-ui button{border:1px solid #ffffff66;background:#172330dc;color:white;border-radius:14px;min-height:48px;padding:8px 14px;font:inherit}
+    #mobile-ui button:active{background:#426d91}#mobile-top{position:absolute;top:max(9px,env(safe-area-inset-top));left:max(10px,env(safe-area-inset-left));right:max(10px,env(safe-area-inset-right));display:flex;justify-content:space-between;gap:8px}
+    #mobile-stick{position:absolute;bottom:max(18px,env(safe-area-inset-bottom));left:max(18px,env(safe-area-inset-left));width:112px;height:112px;border:2px solid #ffffff80;border-radius:50%;background:#14253488;display:grid;place-items:center;text-align:center;font-size:12px}
+    #mobile-actions{position:absolute;right:max(14px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(2,72px);gap:8px}#mobile-actions button{height:52px;padding:4px}
+    #mobile-menu{position:absolute;inset:0;pointer-events:auto;background:#08111be6;display:flex;align-items:center;justify-content:center;padding:16px}#mobile-menu[hidden]{display:none}#mobile-panel{max-width:420px;max-height:85%;overflow:auto;background:#182a39;padding:20px;border-radius:18px;box-sizing:border-box}
+    #mobile-panel h2{margin:0 0 10px;font-size:21px}#mobile-panel p{line-height:1.4}#mobile-panel .choices{display:flex;flex-wrap:wrap;gap:8px}#mobile-panel label{display:block;margin:12px 0}#mobile-status{min-height:38px;color:#c3e7fb;font-size:13px}`;
+    document.head.appendChild(style);
+    const ui = document.createElement('div'); ui.id = 'mobile-ui'; ui.hidden = true;
+    ui.innerHTML = `<div id="mobile-top"><button id="mobile-settings">Controls</button><button id="mobile-pause">Pause</button></div>
+    <div id="mobile-stick" role="application" aria-label="Drag to steer, run or brake">Drag to steer<br>↑ run · ↓ brake</div>
+    <div id="mobile-actions"><button data-action="jump">Jump</button><button data-action="boost">Boost</button><button data-action="drift">Drift</button><button data-action="reverse">Reverse</button></div>
+    <div id="mobile-menu"><div id="mobile-panel"><h2>Phone controls</h2><p>Landscape recommended. Tilt forward to run, left/right to steer, back to brake. A quick upward flick jumps.</p>
+    <p>Hold the phone at your comfortable playing angle when calibrating. Touch Jump is always available.</p><p id="mobile-status" role="status" aria-live="polite">Choose tilt or touch controls.</p>
+    <div class="choices"><button id="mobile-tilt">Enable tilt / Recenter</button><button id="mobile-touch">Use touch</button><button id="mobile-resume">Resume</button><button id="mobile-restart">Restart run</button></div>
+    <label><input id="mobile-invert-steer" type="checkbox"> Invert steering</label><label><input id="mobile-invert-tilt" type="checkbox"> Invert forward / back</label></div></div>`;
+    document.body.appendChild(ui);
+    const find = id => document.getElementById(id), menu = find('mobile-menu'), status = find('mobile-status');
+    function openMenu() { pause(true); menu.hidden = false; find('mobile-pause').textContent = 'Resume'; }
+    function play() { unlockAudio(); request++; core.calibrating = false; pause(false); menu.hidden = true; find('mobile-pause').textContent = 'Pause'; }
+    find('mobile-settings').onclick = openMenu;
+    find('mobile-pause').onclick = () => { if (state.paused) play(); else openMenu(); };
+    find('mobile-resume').onclick = play;
+    find('mobile-touch').onclick = () => { core.mode = 'touch'; core.calibrated = false; core.message = 'Touch controls'; play(); };
+    find('mobile-restart').onclick = () => { state.restart_serial++; play(); };
+    find('mobile-invert-steer').onchange = e => { core.invertSteer = e.target.checked; };
+    find('mobile-invert-tilt').onchange = e => { core.invertTilt = e.target.checked; };
+    const angle = () => screen.orientation?.angle ?? window.orientation ?? 0;
+    function sensors() {
+        if (listening) return;
+        listening = true;
+        addEventListener('deviceorientation', e => core.orientation(e.beta, e.gamma, angle(), performance.now()));
+        addEventListener('devicemotion', e => core.motion(e.acceleration, e.accelerationIncludingGravity, performance.now()));
+        const rotate = () => { clear(); core.calibrated = false; core.calibrating = false; core.message = 'Screen rotated — tap Recenter'; openMenu(); };
+        if (screen.orientation) screen.orientation.addEventListener('change', rotate);
+        else addEventListener('orientationchange', rotate);
+    }
+    find('mobile-tilt').onclick = () => {
+        unlockAudio();
+        if (!isSecureContext || typeof DeviceOrientationEvent === 'undefined') {
+            core.message = 'Motion unavailable here — choose Use touch'; status.textContent = core.message; return;
+        }
+        const id = ++request;
+        const ask = type => { try { return typeof type?.requestPermission === 'function' ? type.requestPermission() : Promise.resolve('granted'); } catch (e) { return Promise.reject(e); } };
+        const orientationPermission = ask(window.DeviceOrientationEvent);
+        const motionPermission = ask(window.DeviceMotionEvent);
+        Promise.allSettled([orientationPermission, motionPermission]).then(results => {
+            if (id !== request) return;
+            if (results[0].status !== 'fulfilled' || results[0].value !== 'granted') {
+                core.message = 'Motion permission denied — choose Use touch'; status.textContent = core.message; return;
+            }
+            sensors(); core.angle = angle(); core.calibrate(performance.now());
+            status.textContent = core.message;
+        });
+    };
+    const pad = find('mobile-stick'); let stickPointer = null;
+    function move(e) {
+        if (e.pointerId !== stickPointer) return;
+        const r = pad.getBoundingClientRect(), axis = v => Math.max(-1, Math.min(1, v));
+        stick = {x: axis((e.clientX - r.left - r.width / 2) / (r.width * 0.36)), y: axis((e.clientY - r.top - r.height / 2) / (r.height * 0.36))};
+        e.preventDefault();
+    }
+    pad.onpointerdown = e => { if (stickPointer !== null || state.paused) return; stickPointer = e.pointerId; pad.setPointerCapture(e.pointerId); move(e); };
+    pad.onpointermove = move;
+    const releaseStick = e => { if (e.pointerId === stickPointer) { stickPointer = null; stick = {x: 0, y: 0}; } };
+    pad.onpointerup = pad.onpointercancel = pad.onlostpointercapture = releaseStick;
+    ui.querySelectorAll('[data-action]').forEach(button => {
+        button.onpointerdown = e => {
+            if (state.paused) return;
+            e.preventDefault(); button.setPointerCapture(e.pointerId); held.set(e.pointerId, button.dataset.action);
+            if (button.dataset.action === 'jump') touchJumps++;
+        };
+        button.onpointerup = button.onpointercancel = button.onlostpointercapture = e => held.delete(e.pointerId);
+    });
+    addEventListener('blur', openMenu);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) openMenu(); });
+    setInterval(() => {
+        if (!window.__velocityStartup?.state.ready) return;
+        ui.hidden = false; api.tick();
+        if (core.calibrated && core.mode === 'tilt' && !menu.hidden && core.message.startsWith('Tilt ready')) { pause(false); menu.hidden = true; core.message = 'Tilt enabled'; }
+        status.textContent = core.message;
+        find('mobile-pause').textContent = state.paused ? 'Resume' : 'Pause';
+    }, 200);
+})();
+
+(() => {
     const canvas = document.getElementById('canvas');
     let timer = null;
     const state = {width: 1920, height: 1080};
     function apply(force = false) {
-        const aspect = Math.max(16 / 9, Math.min(32 / 9, innerWidth / Math.max(innerHeight, 1)));
+        const mobile = window.__velocityMobile?.state.enabled;
+        const aspect = Math.max(mobile ? 0.5 : 16 / 9, Math.min(mobile ? 2.4 : 32 / 9, innerWidth / Math.max(innerHeight, 1)));
         const height = Math.min(innerHeight, innerWidth / aspect);
         canvas.style.width = `${height * aspect}px`;
         canvas.style.height = `${height}px`;
-        const width = 2 * Math.round(1080 * aspect / 2);
-        if (force || state.width !== width) {
+        const bufferHeight = mobile ? 720 : 1080;
+        const width = 2 * Math.round(bufferHeight * aspect / 2);
+        if (force || state.width !== width || state.height !== bufferHeight) {
             state.width = width;
+            state.height = bufferHeight;
             canvas.width = state.width;
             canvas.height = state.height;
         }
@@ -276,8 +494,8 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=2b213129454ac964",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=2b213129454ac964" : name, size])),
+			'mainPack': "index.pck?build=89b0f342adda62e1",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=89b0f342adda62e1" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

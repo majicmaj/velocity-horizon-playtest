@@ -1,5 +1,12 @@
 [
  {
+  "version": 41,
+  "commit": "f453890",
+  "date": "2026-11-01",
+  "subject": "Add wildlife: rabbits, foxes, deer herds, squirrels, frogs, sparrows, circling birds and butterflies that react to the runner",
+  "body": "Animals from free packs (Quaternius CC0 fox/deer/frog, Sherkiz CC BY rabbit, Acorn Bringer squirrel/birds/butterfly) live in seeded slots along the course and spawn near the runner, pooled and capped. They idle, graze, wander, watch, and bolt (sometimes across the trail) when the runner's path comes their way; deer alarm each other, sparrows burst into flight, butterflies scatter. Meshes are re-shaded with smoothed normals. Wildlife costs about 0.6 ms per frame in the desktop browser benchmark."
+ },
+ {
   "version": 40,
   "commit": "bec0bcd",
   "date": "2026-11-01",

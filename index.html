@@ -139,7 +139,7 @@ body {
 #race-meter-alert.bump-green{animation:bump-green .8s ease-out}
 @keyframes bump-green{0%{opacity:0}20%{opacity:1;border-color:#6dff7e;box-shadow:0 0 18px #2fe04e,inset 0 0 12px #2fe04ecc}100%{opacity:0;border-color:#6dff7e}}
 @keyframes meter-alert{0%{opacity:1}25%{opacity:.3}40%{opacity:1}55%{opacity:.3}70%{opacity:1}100%{opacity:0}}
-</style><meta name="velocity-build" content="6af1b9a5b5b9cfa1"></head>
+</style><meta name="velocity-build" content="55bec394ac9a333a"></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
 			Your browser does not support the canvas tag.
@@ -157,7 +157,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":76697692,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":76863856,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -431,7 +431,7 @@ const engine = new Engine(GODOT_CONFIG);
     api.unlock_audio = unlockAudio;
     // Relative pages work on any host the build is served from; the home link is the public address.
     window.__velocitySiteLinks = '<p class="site-links"><a href="https://vh.hobbyhood.app" target="_blank" rel="noopener">vh.hobbyhood.app</a> · '
-        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v38</span></p>';
+        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v39</span></p>';
     if (!enabled) return;
     const meta = document.querySelector('meta[name=viewport]');
     if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
@@ -639,7 +639,8 @@ const engine = new Engine(GODOT_CONFIG);
         plus.style.left = x + 'px'; plus.style.top = y + 'px'; document.body.appendChild(plus);
         plus.addEventListener('animationend', () => plus.remove());
     }
-    function pickup(kind, fx, fy) {
+    function pickup(kind, fx, fy, size) {
+        size = size > 0 ? size : 1;  // under 1 when the camera is pulled back, so the glow matches the smaller bug on screen
         const canvas = document.getElementById('canvas'), rect = canvas ? canvas.getBoundingClientRect() : {left:0,top:0,width:innerWidth,height:innerHeight};
         const sx = rect.left + fx * rect.width, sy = rect.top + fy * rect.height;
         const [ex, ey] = center(find(kind ? 'race-meter-alert' : 'race-speed'));
@@ -651,7 +652,7 @@ const engine = new Engine(GODOT_CONFIG);
             dot.className = 'pickup-fly ' + (kind ? 'green' : 'red'); dot.style.opacity = String(1 - i * .18); document.body.appendChild(dot);
             const steps = 16, frames = [];
             for (let s = 0; s <= steps; s++) {
-                const t = Math.pow(s / steps, 1.5), [x, y] = point(t), scale = (1.5 - t * .8) * (1 - i * .13);
+                const t = Math.pow(s / steps, 1.5), [x, y] = point(t), scale = (1.5 - t * .8) * (1 - i * .13) * (size + (1 - size) * t);
                 frames.push({transform: `translate(${x}px,${y}px) scale(${scale})`});
             }
             const anim = dot.animate(frames, {duration: 760, delay: i * 45, easing: 'linear', fill: 'both'});
@@ -667,7 +668,7 @@ const engine = new Engine(GODOT_CONFIG);
     const state = window.__velocityMobile.state;
     const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
     // In the game only runs of this exact version are shown and submitted; older versions are on the website.
-    const version = 'v38';
+    const version = 'v39';
     const validBase = /^(https:\/\/|http:\/\/(127\.0\.0\.1|localhost)[:/])\S*$/.test(base);
     // Local development builds never talk to the production board (the Worker only allows the real site's origin).
     const remote = validBase && (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /^http:\/\/(127\.0\.0\.1|localhost)[:/]/.test(base));
@@ -825,8 +826,8 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=6af1b9a5b5b9cfa1",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=6af1b9a5b5b9cfa1" : name, size])),
+			'mainPack': "index.pck?build=55bec394ac9a333a",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=55bec394ac9a333a" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

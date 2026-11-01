@@ -1,5 +1,12 @@
 [
  {
+  "version": 39,
+  "commit": "0b13420",
+  "date": "2026-11-01",
+  "subject": "Heavier opaque waterfall with a big pool and roar, cave-exit pull-back, no more crest spires, jump look-down, smaller pickup glow, quieter booms",
+  "body": ""
+ },
+ {
   "version": 38,
   "commit": "a317c09",
   "date": "2026-11-01",

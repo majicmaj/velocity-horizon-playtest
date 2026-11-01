@@ -91,7 +91,7 @@ body {
 }
 		</style>
 		<link rel='icon' href='index.png'><style>#canvas { width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); margin: auto; position: absolute; inset: 0; }</style>
-	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=14e8495631a4') format('truetype');font-display:swap}
+	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=f292b9638026') format('truetype');font-display:swap}
 #race-hud,#mobile-ui{--side:clamp(76px,17vh,172px)}
 #mobile-knob{background:none!important;box-shadow:none!important}
 #race-hud{position:fixed;inset:0;z-index:18;pointer-events:none;color:#f2f8ff;font-family:Velocity,system-ui,sans-serif;font-weight:700;font-style:italic;--side:clamp(76px,17vh,172px);--tab:clamp(110px,20vw,250px);--dial:clamp(300px,52vw,760px);text-shadow:0 2px 3px #000,0 0 7px #1f86ff}
@@ -128,8 +128,18 @@ body {
 #lb[data-mode=view] #lb-time,#lb[data-mode=view] #lb-sub,#lb[data-mode=view] #lb-form,#lb[data-mode=view] #lb-again{display:none}#lb[data-mode=finish] #lb-close{display:none}#lb .lb-page{margin:10px 0 0;font-size:13px}#lb .lb-page a{color:#9fd2ff}
 #race-meter-alert{position:absolute;left:41.4%;width:36.4%;top:74%;height:15%;border:2px solid #ff3b30;border-radius:7px;transform:skewX(-15deg);box-shadow:0 0 10px #ff3b30,inset 0 0 8px #ff3b3099;opacity:0;pointer-events:none}
 #race-meter-alert.flash{animation:meter-alert .8s ease-out}
+.pickup-fly{position:fixed;left:0;top:0;width:24px;height:24px;margin:-12px 0 0 -12px;border-radius:50%;pointer-events:none;z-index:60;will-change:transform}
+.pickup-fly.red{background:radial-gradient(circle,#fff 0 16%,#ff6a55 34%,#ff2616 58%,transparent 72%);box-shadow:0 0 16px 7px #ff2616cc,0 0 34px 14px #ff261666}
+.pickup-fly.green{background:radial-gradient(circle,#fff 0 16%,#9bff8a 34%,#2fe04e 58%,transparent 72%);box-shadow:0 0 16px 7px #2fe04ecc,0 0 34px 14px #2fe04e66}
+.pickup-plus{position:fixed;transform:translate(-50%,-50%);font:700 20px/1 Velocity,system-ui,sans-serif;letter-spacing:.05em;pointer-events:none;z-index:60;animation:pickup-plus .9s ease-out forwards;text-shadow:0 0 8px currentColor,0 1px 2px #000}
+.pickup-plus.red{color:#ff5a48}.pickup-plus.green{color:#6dff7e}
+@keyframes pickup-plus{0%{opacity:0;transform:translate(-50%,-30%) scale(.8)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-190%) scale(1.15)}}
+#race-speed.bump-red{animation:bump-red .7s ease-out}
+@keyframes bump-red{0%{text-shadow:0 0 0 #ff2616;transform:scale(1)}25%{text-shadow:0 0 18px #ff2616,0 0 36px #ff2616;color:#ffb0a6;transform:scale(1.1)}100%{text-shadow:0 0 0 #ff2616;transform:scale(1)}}
+#race-meter-alert.bump-green{animation:bump-green .8s ease-out}
+@keyframes bump-green{0%{opacity:0}20%{opacity:1;border-color:#6dff7e;box-shadow:0 0 18px #2fe04e,inset 0 0 12px #2fe04ecc}100%{opacity:0;border-color:#6dff7e}}
 @keyframes meter-alert{0%{opacity:1}25%{opacity:.3}40%{opacity:1}55%{opacity:.3}70%{opacity:1}100%{opacity:0}}
-</style><meta name="velocity-build" content="c3f9245ada0179f6"></head>
+</style><meta name="velocity-build" content="d2c2e5282bbabc8a"></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
 			Your browser does not support the canvas tag.
@@ -147,7 +157,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":76678868,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":76691572,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -421,7 +431,7 @@ const engine = new Engine(GODOT_CONFIG);
     api.unlock_audio = unlockAudio;
     // Relative pages work on any host the build is served from; the home link is the public address.
     window.__velocitySiteLinks = '<p class="site-links"><a href="https://vh.hobbyhood.app" target="_blank" rel="noopener">vh.hobbyhood.app</a> · '
-        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v36</span></p>';
+        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v37</span></p>';
     if (!enabled) return;
     const meta = document.querySelector('meta[name=viewport]');
     if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
@@ -520,10 +530,10 @@ const engine = new Engine(GODOT_CONFIG);
         stick:[0,0,365,365],boost:[369,0,246,237],jump:[619,0,190,184],drift:[813,0,187,182],reverse:[1004,0,193,180],
         knob:[1201,0,112,112],pause:[0,369,270,97],controls:[274,369,320,93],bar:[0,470,1155,90]
     };
-    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=14e8495631a4" alt=""></span>`;
+    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=f292b9638026" alt=""></span>`;
     function art(name) {
         const [x,y,w,h] = regions[name];
-        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=14e8495631a4" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
+        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=f292b9638026" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
     }
     const hud = document.createElement('div'); hud.id = 'race-hud'; hud.hidden = true;
     hud.innerHTML = `<button id="race-controls" class="race-tab" aria-label="Controls">${art('controls')}<span>CONTROLS</span></button>
@@ -617,7 +627,39 @@ const engine = new Engine(GODOT_CONFIG);
         find('race-toast').classList.toggle('show',now<toastUntil);
         const knob=find('mobile-knob'); if(knob) knob.style.transform=`translate(${state.steer*85}%,${(state.brake-state.throttle)*85}%)`;
     }
-    window.__velocityHud = {toast}; requestAnimationFrame(frame);
+    // A bug picked up: a red (ladybug) or green (beetle) glow with a short trail flies from where it was collected to
+    // the speed readout or the boost bar, which then pulses and shows the +1.
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function center(el) { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; }
+    function bump(kind) {
+        const target = find(kind ? 'race-meter-alert' : 'race-speed'), cls = kind ? 'bump-green' : 'bump-red';
+        target.classList.remove(cls); void target.offsetWidth; target.classList.add(cls);
+        const [x, y] = center(target), plus = document.createElement('div');
+        plus.className = 'pickup-plus ' + (kind ? 'green' : 'red'); plus.textContent = kind ? '+1%' : '+1 km/h';
+        plus.style.left = x + 'px'; plus.style.top = y + 'px'; document.body.appendChild(plus);
+        plus.addEventListener('animationend', () => plus.remove());
+    }
+    function pickup(kind, fx, fy) {
+        const canvas = document.getElementById('canvas'), rect = canvas ? canvas.getBoundingClientRect() : {left:0,top:0,width:innerWidth,height:innerHeight};
+        const sx = rect.left + fx * rect.width, sy = rect.top + fy * rect.height;
+        const [ex, ey] = center(find(kind ? 'race-meter-alert' : 'race-speed'));
+        if (reduced) { bump(kind); return; }
+        const mx = (sx + ex) / 2 + (Math.random() - .5) * 120, my = Math.min(sy, ey) - 70 - Math.random() * 50;
+        const point = t => [(1-t)*(1-t)*sx + 2*(1-t)*t*mx + t*t*ex, (1-t)*(1-t)*sy + 2*(1-t)*t*my + t*t*ey];
+        for (let i = 0; i < 5; i++) {  // the head, then four fainter, smaller ghosts behind it
+            const dot = document.createElement('div');
+            dot.className = 'pickup-fly ' + (kind ? 'green' : 'red'); dot.style.opacity = String(1 - i * .18); document.body.appendChild(dot);
+            const steps = 16, frames = [];
+            for (let s = 0; s <= steps; s++) {
+                const t = Math.pow(s / steps, 1.5), [x, y] = point(t), scale = (1.5 - t * .8) * (1 - i * .13);
+                frames.push({transform: `translate(${x}px,${y}px) scale(${scale})`});
+            }
+            const anim = dot.animate(frames, {duration: 760, delay: i * 45, easing: 'linear', fill: 'both'});
+            anim.onfinish = () => { dot.remove(); if (i === 0) bump(kind); };
+        }
+    }
+    mobile.pickup = pickup;
+    window.__velocityHud = {toast, pickup}; requestAnimationFrame(frame);
 })();
 
 (() => {
@@ -625,7 +667,7 @@ const engine = new Engine(GODOT_CONFIG);
     const state = window.__velocityMobile.state;
     const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
     // In the game only runs of this exact version are shown and submitted; older versions are on the website.
-    const version = 'v36';
+    const version = 'v37';
     const validBase = /^(https:\/\/|http:\/\/(127\.0\.0\.1|localhost)[:/])\S*$/.test(base);
     // Local development builds never talk to the production board (the Worker only allows the real site's origin).
     const remote = validBase && (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /^http:\/\/(127\.0\.0\.1|localhost)[:/]/.test(base));
@@ -783,8 +825,8 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=c3f9245ada0179f6",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=c3f9245ada0179f6" : name, size])),
+			'mainPack': "index.pck?build=d2c2e5282bbabc8a",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=d2c2e5282bbabc8a" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

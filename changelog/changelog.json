@@ -1,5 +1,12 @@
 [
  {
+  "version": 37,
+  "commit": "1a4cc00",
+  "date": "2026-11-01",
+  "subject": "Drop the start boom, add hand-painted warning signs before the gap, fly pickup glows to the gauges",
+  "body": ""
+ },
+ {
   "version": 36,
   "commit": "cf4566b",
   "date": "2026-10-31",

@@ -1,5 +1,75 @@
 [
  {
+  "version": 52,
+  "commit": "afb46fd",
+  "date": "2026-11-02",
+  "subject": "Summit leap ledge onto the path, boost carries you along castle walls, cave walls bounce",
+  "body": "The summit's backward railing gap is replaced by a stone ledge pointing down the path; running off it launches a\n3.6 s arc onto the ramp below the castle. While boosting, the stair and castle walls turn the runner along them instead\nof stopping it (square on: up the stair). Waterfall cave and mountain walls now bounce the runner off with most of its\nspeed. Stair treads now reach the round wall (they left a 1.3 m gap). New cave bounce test; tower test covers the\nleap and the boosted wall carry; both run in the full gate."
+ },
+ {
+  "version": 51,
+  "commit": "745d041",
+  "date": "2026-11-02",
+  "subject": "Make the summit stair tower a round tower around the spiral instead of a box",
+  "body": "The 27 x 56 m box keep is replaced by a 10.6 m-radius stone cylinder hugging the staircase: inner and outer faces, a\ndoorway from the hall, string courses, arrow slits, a corbelled ring under the terrace and three bartizans clear of the\nbroken-railing jump. Collision follows the new walls."
+ },
+ {
+  "version": 50,
+  "commit": "d9e1ce4",
+  "date": "2026-11-02",
+  "subject": "Give the summit stair tower a solid paved ground floor",
+  "body": "The well around the newel and under the first turn had no floor and no terrain collision beneath it, so it rendered as\na dark hole and the runner could fall through. A paved disc with collision now covers it."
+ },
+ {
+  "version": 49,
+  "commit": "3984ddf",
+  "date": "2026-11-02",
+  "subject": "Open the summit stair exit and record a continuous beetle climb",
+  "body": ""
+ },
+ {
+  "version": 48,
+  "commit": "d0bcae5",
+  "date": "2026-11-02",
+  "subject": "Correct castle proportions, enrich masonry and flatten its foundation",
+  "body": ""
+ },
+ {
+  "version": 47,
+  "commit": "9e8c49d",
+  "date": "2026-11-02",
+  "subject": "Ship the loading background as a 0.4 MB progressive JPEG instead of the 2.7 MB PNG",
+  "body": ""
+ },
+ {
+  "version": 46,
+  "commit": "422aa85",
+  "date": "2026-11-02",
+  "subject": "Replace the Godot loading screen with the supplied alpine art and an animated red loading bar",
+  "body": "The page now opens on the user's background with a fade-in, a slanted red bar that fills from real startup progress\n(download, trail, landscape and water warmup), a pulsing head, a shimmer while totals are unknown and a fade out once\nthe game is ready. Responsive on desktop, ultrawide and phones; failures keep a readable notice. The fill is a\ntransparent crop of the supplied bar image."
+ },
+ {
+  "version": 45,
+  "commit": "b98e344",
+  "date": "2026-11-02",
+  "subject": "Polish secret stone doorway and add emerald orb glow and spatial hum",
+  "body": ""
+ },
+ {
+  "version": 44,
+  "commit": "cdf0411",
+  "date": "2026-11-02",
+  "subject": "Remaster western castle detour with hidden summit spiral and orb reward",
+  "body": ""
+ },
+ {
+  "version": 43,
+  "commit": "0290521",
+  "date": "2026-11-02",
+  "subject": "Add Gate Keep: a castle route off the lake with a 300 km/h boost-only gate and a super beetle",
+  "body": "A stone causeway leads off the lake's left side to a castle in the water, modelled after the user's reference photo\n(towers, steep slate spires, half-timbered turrets, arched gatehouse). Its oak gate breaks only to a boosted runner at\n300 km/h or more; the torch-lit hall inside holds a super beetle worth +25% max boost and +25% recharge for the run.\nCastle walls turn a glancing runner instead of stopping them. CC0 Poly Haven textures; the sign font is now exported."
+ },
+ {
   "version": 42,
   "commit": "45e37ac",
   "date": "2026-11-01",

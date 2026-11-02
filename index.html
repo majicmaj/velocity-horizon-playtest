@@ -91,7 +91,7 @@ body {
 }
 		</style>
 		<link rel='icon' href='index.png'><style>#canvas { width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); margin: auto; position: absolute; inset: 0; }</style>
-	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=f292b9638026') format('truetype');font-display:swap}
+	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=fd387c2347f6') format('truetype');font-display:swap}
 #race-hud,#mobile-ui{--side:clamp(76px,17vh,172px)}
 #mobile-knob{background:none!important;box-shadow:none!important}
 #race-hud{position:fixed;inset:0;z-index:18;pointer-events:none;color:#f2f8ff;font-family:Velocity,system-ui,sans-serif;font-weight:700;font-style:italic;--side:clamp(76px,17vh,172px);--tab:clamp(110px,20vw,250px);--dial:clamp(300px,52vw,760px);text-shadow:0 2px 3px #000,0 0 7px #1f86ff}
@@ -139,7 +139,8 @@ body {
 #race-meter-alert.bump-green{animation:bump-green .8s ease-out}
 @keyframes bump-green{0%{opacity:0}20%{opacity:1;border-color:#6dff7e;box-shadow:0 0 18px #2fe04e,inset 0 0 12px #2fe04ecc}100%{opacity:0;border-color:#6dff7e}}
 @keyframes meter-alert{0%{opacity:1}25%{opacity:.3}40%{opacity:1}55%{opacity:.3}70%{opacity:1}100%{opacity:0}}
-</style><meta name="velocity-build" content="8dae096ec5ac1189"></head>
+#race-ghost{position:absolute;top:100%;right:3%;width:25%;margin-top:.5cqw;text-align:center;font-size:max(2.6cqw,13px);line-height:1.1}#race-ghost[hidden]{display:none}#race-ghost small{font-size:.58em;color:#9fd2ff;letter-spacing:.08em;margin-right:.45em}#race-ghost.ahead b{color:#7dffa0}#race-ghost.behind b{color:#ff8f7d}
+</style><meta name="velocity-build" content="ef03b9e1ecdaf11b"></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
 			Your browser does not support the canvas tag.
@@ -157,7 +158,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":80995572,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":81218980,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -431,7 +432,7 @@ const engine = new Engine(GODOT_CONFIG);
     api.unlock_audio = unlockAudio;
     // Relative pages work on any host the build is served from; the home link is the public address.
     window.__velocitySiteLinks = '<p class="site-links"><a href="https://vh.hobbyhood.app" target="_blank" rel="noopener">vh.hobbyhood.app</a> · '
-        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v41</span></p>';
+        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v42</span></p>';
     if (!enabled) return;
     const meta = document.querySelector('meta[name=viewport]');
     if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
@@ -530,14 +531,14 @@ const engine = new Engine(GODOT_CONFIG);
         stick:[0,0,365,365],boost:[369,0,246,237],jump:[619,0,190,184],drift:[813,0,187,182],reverse:[1004,0,193,180],
         knob:[1201,0,112,112],pause:[0,369,270,97],controls:[274,369,320,93],bar:[0,470,1155,90]
     };
-    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=f292b9638026" alt=""></span>`;
+    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=fd387c2347f6" alt=""></span>`;
     function art(name) {
         const [x,y,w,h] = regions[name];
-        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=f292b9638026" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
+        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=fd387c2347f6" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
     }
     const hud = document.createElement('div'); hud.id = 'race-hud'; hud.hidden = true;
     hud.innerHTML = `<button id="race-controls" class="race-tab" aria-label="Controls">${art('controls')}<span>CONTROLS</span></button>
-        <div id="race-top">${art('bar')}<div id="race-values"><div><b id="race-ladybugs">000</b><small>LADYBUGS</small></div><div><b id="race-beetles">000</b><small>BEETLES</small></div><div><b id="race-distance">0 m</b><small>DISTANCE</small></div><div><b id="race-time">00:00</b><small>TIME</small></div></div></div>
+        <div id="race-top">${art('bar')}<div id="race-values"><div><b id="race-ladybugs">000</b><small>LADYBUGS</small></div><div><b id="race-beetles">000</b><small>BEETLES</small></div><div><b id="race-distance">0 m</b><small>DISTANCE</small></div><div><b id="race-time">00:00</b><small>TIME</small></div></div><div id="race-ghost" hidden><small>GHOST</small><b id="race-ghost-gap">+0.00</b></div></div>
         <button id="race-pause" class="race-tab" aria-label="Pause">${art('pause')}<span>PAUSE</span></button>
         <button id="race-fullscreen" aria-label="Fullscreen" title="Fullscreen">⛶</button><div id="race-toast" role="status"></div>
         <div id="race-menu" hidden><div class="race-menu-card" role="dialog" aria-label="Paused"><h2>PAUSED</h2>
@@ -621,6 +622,14 @@ const engine = new Engine(GODOT_CONFIG);
         const values = [String(ladybugs).padStart(3,'0'),String(beetles).padStart(3,'0'),`${Math.round(state.distance || 0).toLocaleString()} m`,
             `${String(Math.floor(time/60)).padStart(2,'0')}:${(time%60).toFixed(1).padStart(4,'0')}`,`${String(Math.round(speed)).padStart(3,'0')} <small>km/h</small>`,`${Math.round(shownCharge*100)}%`];
         fields.forEach((id,i)=>{ if(find(id).innerHTML!==values[i]) find(id).innerHTML=values[i]; });
+        // Ahead of (green, −) or behind (red, +) the leaderboard ghost at this point of the course.
+        const gap = state.ghost_gap, chip = find('race-ghost'), hasGap = typeof gap === 'number' && Number.isFinite(gap);
+        if (chip.hidden === hasGap) chip.hidden = !hasGap;
+        if (hasGap) {
+            const text = `${gap < 0 ? '−' : '+'}${Math.abs(gap).toFixed(2)}`;
+            if (find('race-ghost-gap').textContent !== text) find('race-ghost-gap').textContent = text;
+            chip.className = gap < 0 ? 'ahead' : 'behind';
+        }
         find('race-menu').hidden = state.enabled || !state.paused || !!window.__velocityLeaderboard?.isOpen();
         find('race-pause').lastElementChild.textContent=state.paused?'RESUME':'PAUSE';
         find('race-pause').setAttribute('aria-label',state.paused?'Resume':'Pause');
@@ -668,7 +677,7 @@ const engine = new Engine(GODOT_CONFIG);
     const state = window.__velocityMobile.state;
     const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
     // In the game only runs of this exact version are shown and submitted; older versions are on the website.
-    const version = 'v41';
+    const version = 'v42';
     const validBase = /^(https:\/\/|http:\/\/(127\.0\.0\.1|localhost)[:/])\S*$/.test(base);
     // Local development builds never talk to the production board (the Worker only allows the real site's origin).
     const remote = validBase && (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /^http:\/\/(127\.0\.0\.1|localhost)[:/]/.test(base));
@@ -703,6 +712,25 @@ const engine = new Engine(GODOT_CONFIG);
             return {rank: rows.findIndex(row => row.name.toLowerCase() === key) + 1, improved, top: rows.slice(0, 10)};
         },
     };
+
+    // The ghost: the fastest run of this version, recorded by the game and raced as a see-through runner. Only the
+    // latest version's best run is kept (the Worker holds one; this device keeps one per version and drops older ones).
+    const ghostKey = 'velocity.ghost.' + version;
+    function useGhost(ghost) {
+        if (!ghost || typeof ghost.data !== 'string') return;
+        window.__velocityGhost = {...ghost, serial: (window.__velocityGhost?.serial || 0) + 1};
+    }
+    async function loadGhost() {
+        try {
+            for (let i = localStorage.length - 1; i >= 0; i--) {
+                const key = localStorage.key(i);
+                if (key?.startsWith('velocity.ghost.') && key !== ghostKey) localStorage.removeItem(key);
+            }
+        } catch { /* private mode */ }
+        try { useGhost(remote ? (await request('/ghost?version=' + encodeURIComponent(version))).ghost : store.get(ghostKey, null)); }
+        catch { /* race without a ghost */ }
+    }
+    loadGhost();
 
     const panel = document.createElement('div');
     panel.id = 'lb'; panel.hidden = true;
@@ -770,14 +798,23 @@ const engine = new Engine(GODOT_CONFIG);
         if (!validName() || busy || submitted) return;
         const name = clean(input.value);
         const entry = {name, time: Math.round(state.time * 1000) / 1000, ladybugs: state.ladybugs || 0, beetles: state.beetles || 0};
+        let run = null;
+        try { run = JSON.parse(state.ghost_run || 'null'); } catch { run = null; }
+        if (!run || typeof run.data !== 'string') run = null;
         busy = true; refreshSubmit(); msg.textContent = 'Submitting…';
         try {
             if (remote && !token) await startToken(true);
-            const data = remote ? await request('/score', {method: 'POST', body: JSON.stringify({...entry, version, token})}) : local.add(entry);
+            const data = remote ? await request('/score', {method: 'POST', body: JSON.stringify({...entry, version, token, ...(run ? {ghost: run} : {})})}) : local.add(entry);
+            const best = run && (remote ? data.ghost === true : data.improved && data.rank === 1);
+            if (best) {
+                const ghost = {...run, name, time: entry.time};
+                if (!remote) store.set(ghostKey, ghost);
+                useGhost(ghost);  // race again: the new best run is the ghost
+            }
             if (remote) token = null;
             store.set('velocity.name', name);
             submitted = true; mine = name; input.disabled = true; submit.hidden = true;
-            msg.textContent = data.improved === false ? `Your best is still ahead of this run — rank #${data.rank}.` : `You’re #${data.rank}${remote ? '' : ' on this device'}!`;
+            msg.textContent = data.improved === false ? `Your best is still ahead of this run — rank #${data.rank}.` : `You’re #${data.rank}${remote ? '' : ' on this device'}!${best ? ' Your run is now the ghost to beat.' : ''}`;
             render(data.top, name);
         } catch (error) {
             msg.textContent = error.name === 'AbortError' ? 'The leaderboard timed out. Try again.' : `${error.message || 'Couldn’t submit.'} Try again.`;
@@ -826,8 +863,8 @@ const engine = new Engine(GODOT_CONFIG);
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=8dae096ec5ac1189",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=8dae096ec5ac1189" : name, size])),
+			'mainPack': "index.pck?build=ef03b9e1ecdaf11b",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=ef03b9e1ecdaf11b" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

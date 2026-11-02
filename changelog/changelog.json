@@ -1,5 +1,12 @@
 [
  {
+  "version": 42,
+  "commit": "45e37ac",
+  "date": "2026-11-01",
+  "subject": "Race a ghost of the fastest run of this version: see-through runner with a name tag and a live ahead/behind time under the clock",
+  "body": ""
+ },
+ {
   "version": 41,
   "commit": "f453890",
   "date": "2026-11-01",

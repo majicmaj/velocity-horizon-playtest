@@ -55,6 +55,9 @@
 	if (window.__velocityShaderPrime || /[?&]shaderprime=off\b/.test(location.search)) return;
 	const state = window.__velocityShaderPrime = {total: 0, done: 0, linked: 0, ms: 0, startedAt: 0, finishedAt: 0, finished: false, error: ''};
 	if (typeof Worker === 'undefined' || typeof OffscreenCanvas === 'undefined') { state.error = 'unsupported'; state.finished = true; return; }
+	// Firefox keeps no program cache shared between WebGL contexts, so pre-compiling there only doubles the work: in
+	// Firefox 143 it took 23 s and held the engine's start back by as long, and Godot then compiled everything again.
+	if (/Firefox\//.test(navigator.userAgent)) { state.error = 'no shared program cache (Firefox)'; state.finished = true; return; }
 	const worker = `
 self.onmessage = async ({data}) => {
 	const started = performance.now();
@@ -119,6 +122,54 @@ self.onmessage = async ({data}) => {
 		thread.onerror = event => { state.error = String(event.message || 'worker failed'); state.finished = true; };
 		thread.postMessage(text);
 	}).catch(error => { state.error = String(error.message || error); state.finished = true; });
+})();
+</script><script>// Warns players whose browser draws WebGL without the graphics card. With hardware acceleration switched off (a
+// common setting in Opera, sometimes in Chrome, Edge and Firefox) WebGL falls back to a software renderer such as
+// SwiftShader or the Microsoft Basic Render Driver, which runs this game at a frame or two a second. The page cannot
+// change the setting, so it names it: a banner on top of the loading screen and the game, dismissible.
+(() => {
+	if (window.__velocityGpuCheck) return;
+	const check = window.__velocityGpuCheck = {renderer: '', software: false};
+	try {
+		const gl = document.createElement('canvas').getContext('webgl2');
+		if (!gl) return;
+		const info = gl.getExtension('WEBGL_debug_renderer_info');
+		check.renderer = String(info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER));
+		gl.getExtension('WEBGL_lose_context')?.loseContext();
+	} catch (error) {
+		return;
+	}
+	check.software = /swiftshader|basic render|llvmpipe|softpipe|software|warp/i.test(check.renderer)
+		|| /[?&]gpucheck=software\b/.test(location.search);  // for testing the banner
+	if (!check.software) return;
+	const agent = navigator.userAgent;
+	const steps = /\bOPR\//.test(agent) ? 'Opera: Settings → System → turn on “Use graphics acceleration when available”, then restart Opera.'
+		: /\bEdg\//.test(agent) ? 'Edge: Settings → System and performance → turn on “Use graphics acceleration when available”, then restart Edge.'
+		: /Firefox\//.test(agent) ? 'Firefox: Settings → General → Performance → untick “Use recommended performance settings”, tick “Use hardware acceleration when available”, then restart Firefox.'
+		: 'Chrome: Settings → System → turn on “Use graphics acceleration when available”, then relaunch Chrome.';
+	const show = () => {
+		const banner = document.createElement('div');
+		banner.id = 'gpu-warning';
+		banner.setAttribute('role', 'alert');
+		banner.style.cssText = 'position:fixed;z-index:1000;left:50%;top:max(12px,env(safe-area-inset-top));transform:translateX(-50%);'
+			+ 'width:min(92vw,720px);box-sizing:border-box;padding:14px 44px 14px 18px;border:2px solid #ff6c48;border-radius:12px;'
+			+ 'background:#150e11ee;color:#fff2e9;font:600 15px/1.45 system-ui,sans-serif;box-shadow:0 6px 24px #000a';
+		const title = document.createElement('div');
+		title.textContent = 'Your browser is running this game without your graphics card, so it will be very slow.';
+		title.style.cssText = 'font-size:16px;margin-bottom:6px;color:#ffd2b8';
+		const body = document.createElement('div');
+		body.textContent = steps;
+		const close = document.createElement('button');
+		close.type = 'button';
+		close.textContent = '×';
+		close.setAttribute('aria-label', 'Dismiss');
+		close.style.cssText = 'position:absolute;right:10px;top:8px;border:0;background:none;color:#ffd2b8;font:700 22px/1 system-ui;cursor:pointer';
+		close.addEventListener('click', () => banner.remove());
+		banner.append(title, body, close);
+		document.body.appendChild(banner);
+	};
+	if (document.body) show();
+	else document.addEventListener('DOMContentLoaded', show, {once: true});
 })();
 </script>
 		<meta charset="utf-8">
@@ -332,7 +383,10 @@ const loadingUI = (() => {
  // It is re-paced (inside requestAnimationFrame, so the change reaches the compositor that frame) only while the
  // download runs: once the engine blocks the main thread, the compositor's and the main thread's idea of a running
  // transition drift apart, and re-aiming from the main thread's makes the bar jump.
- const after = {'engine-download':12, 'engine-start':12, 'initial-sector':8.5, 'render-warmup':4, 'water-warmup':1.8, 'game-start':1};
+ // Seconds a first visit usually takes after each point. Firefox compiles every shader itself, one by one (no
+ // pre-compiling there, see web_shader_prime.js), so its start-up takes about twice as long.
+ const slow = /Firefox\//.test(navigator.userAgent) ? 2.2 : 1;
+ const after = {'engine-download':12 * slow, 'engine-start':12 * slow, 'initial-sector':8.5 * slow, 'render-warmup':4 * slow, 'water-warmup':1.8, 'game-start':1};
  let estimate = 0, queued = false, paced = 0;
  const download = {bytes: 0, total: 0, since: 0, last: 0};
  const names = {'engine-download':'Downloading your run', 'engine-start':'Starting your run',
@@ -677,7 +731,7 @@ const loadingUI = (() => {
     api.unlock_audio = unlockAudio;
     // Relative pages work on any host the build is served from; the home link is the public address.
     window.__velocitySiteLinks = '<p class="site-links"><a href="https://vh.hobbyhood.app" target="_blank" rel="noopener">vh.hobbyhood.app</a> · '
-        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v59</span></p>';
+        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v60</span></p>';
     if (!enabled) return;
     const meta = document.querySelector('meta[name=viewport]');
     if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
@@ -924,7 +978,7 @@ const loadingUI = (() => {
     const state = window.__velocityMobile.state;
     const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
     // In the game only runs of this exact version are shown and submitted; older versions are on the website.
-    const version = 'v59';
+    const version = 'v60';
     const validBase = /^(https:\/\/|http:\/\/(127\.0\.0\.1|localhost)[:/])\S*$/.test(base);
     // Local development builds never talk to the production board (the Worker only allows the real site's origin).
     const remote = validBase && (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /^http:\/\/(127\.0\.0\.1|localhost)[:/]/.test(base));

@@ -1,5 +1,12 @@
 [
  {
+  "version": 60,
+  "commit": "602ae20",
+  "date": "2026-11-03",
+  "subject": "Browser compatibility: no shader pre-compiling in Firefox (it has no shared program cache), Firefox-paced loading bar, and a banner when WebGL is running without the graphics card",
+  "body": ""
+ },
+ {
   "version": 59,
   "commit": "ecc5133",
   "date": "2026-11-03",

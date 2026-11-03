@@ -1,6 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
+	<head><script>// Skips shader compiles the game never uses. When Godot's compatibility renderer creates a material it compiles that
+// material's scene shader at once in its *default* specialization: every light type, lightmaps and no fog switched on.
+// The renderer never draws with that program (every real draw names the lights it lacks, e.g. DISABLE_LIGHT_SPOT, and
+// the world always has depth fog); it compiles the specialization it needs at first draw. Through ANGLE/Direct3D in
+// Chrome each default program takes 0.2-1.2 s to compile, about 57 s of an 80 s first load, so here their sources are
+// swapped for a trivial pair before compiling. Should one ever be used for a draw, it is counted in
+// window.__velocityShaderShim.misdraws (the browser checks assert zero).
+(() => {
+	if (window.__velocityShaderShim || typeof WebGL2RenderingContext === 'undefined') return;
+	const shim = window.__velocityShaderShim = {skipped: 0, compiled: 0, misdraws: 0, enabled: !/[?&]shadershim=off\b/.test(location.search)};
+	if (!shim.enabled) return;
+	const proto = WebGL2RenderingContext.prototype;
+	const VERTEX = '#version 300 es\nvoid main() { gl_Position = vec4(0.0); }';
+	const FRAGMENT = '#version 300 es\nprecision mediump float;\nout vec4 color;\nvoid main() { color = vec4(0.0); }';
+	const unused = source => source.includes('\n#define BASE_PASS') && !source.includes('\n#define USE_DEPTH_FOG')
+		&& !source.includes('\n#define DISABLE_LIGHT_');
+	const skipped = new WeakSet();
+	const shaderSource = proto.shaderSource;
+	proto.shaderSource = function(shader, source) {
+		if (typeof source === 'string' && unused(source)) {
+			shim.skipped++;
+			skipped.add(shader);
+			const vertex = this.getShaderParameter(shader, this.SHADER_TYPE) === this.VERTEX_SHADER;
+			return shaderSource.call(this, shader, vertex ? VERTEX : FRAGMENT);
+		}
+		shim.compiled++;
+		return shaderSource.call(this, shader, source);
+	};
+	const stubs = new WeakSet();
+	const attachShader = proto.attachShader;
+	proto.attachShader = function(program, shader) {
+		if (skipped.has(shader)) stubs.add(program);
+		return attachShader.call(this, program, shader);
+	};
+	let current = null;
+	const useProgram = proto.useProgram;
+	proto.useProgram = function(program) { current = program; return useProgram.call(this, program); };
+	for (const name of ['drawArrays', 'drawElements', 'drawArraysInstanced', 'drawElementsInstanced', 'drawRangeElements']) {
+		const draw = proto[name];
+		proto[name] = function(...args) {
+			if (current !== null && stubs.has(current)) shim.misdraws++;
+			return draw.apply(this, args);
+		};
+	}
+})();
+</script><script>// Pre-compiles the game's shader programs while the engine is still downloading. Through ANGLE/Direct3D a first visit
+// spends about 80 ms per program, and Godot compiles them one at a time, each blocking a frame. The build records the
+// exact programs Godot compiles (tools/web_shader_capture.py) into shaders.json?build=35f4a6a6d004d350; a worker here compiles them all in
+// an offscreen WebGL2 context with KHR_parallel_shader_compile, so the browser builds them in parallel (about 1.8 s
+// for 120 programs instead of 8 s) and keeps the results in its program cache, where Godot's identical compiles later
+// find them. Programs this device would generate differently are simply compiled by Godot as before.
+(() => {
+	if (window.__velocityShaderPrime || /[?&]shaderprime=off\b/.test(location.search)) return;
+	const state = window.__velocityShaderPrime = {total: 0, done: 0, linked: 0, ms: 0, startedAt: 0, finishedAt: 0, finished: false, error: ''};
+	if (typeof Worker === 'undefined' || typeof OffscreenCanvas === 'undefined') { state.error = 'unsupported'; state.finished = true; return; }
+	const worker = `
+self.onmessage = async ({data}) => {
+	const started = performance.now();
+	const gl = new OffscreenCanvas(4, 4).getContext('webgl2');
+	if (!gl) { self.postMessage({error: 'no webgl2'}); return; }
+	// Enable exactly the extensions the engine's context enables (Emscripten's list, then Godot's multiview): the
+	// browser translates shaders, and keys its program cache, by the extensions in force, so any difference misses.
+	const known = ['ANGLE_instanced_arrays','EXT_blend_minmax','EXT_disjoint_timer_query','EXT_frag_depth','EXT_shader_texture_lod','EXT_sRGB','OES_element_index_uint','OES_fbo_render_mipmap','OES_standard_derivatives','OES_texture_float','OES_texture_half_float','OES_texture_half_float_linear','OES_vertex_array_object','WEBGL_color_buffer_float','WEBGL_depth_texture','WEBGL_draw_buffers','EXT_color_buffer_float','EXT_conservative_depth','EXT_disjoint_timer_query_webgl2','EXT_texture_norm16','NV_shader_noperspective_interpolation','WEBGL_clip_cull_distance','EXT_clip_control','EXT_color_buffer_half_float','EXT_depth_clamp','EXT_float_blend','EXT_polygon_offset_clamp','EXT_texture_compression_bptc','EXT_texture_compression_rgtc','EXT_texture_filter_anisotropic','KHR_parallel_shader_compile','OES_texture_float_linear','WEBGL_blend_func_extended','WEBGL_compressed_texture_astc','WEBGL_compressed_texture_etc','WEBGL_compressed_texture_etc1','WEBGL_compressed_texture_s3tc','WEBGL_compressed_texture_s3tc_srgb','WEBGL_multi_draw','WEBGL_polygon_mode'];
+	for (const name of ['WEBGL_multi_draw','EXT_polygon_offset_clamp','EXT_clip_control','WEBGL_polygon_mode','ANGLE_instanced_arrays','OES_vertex_array_object','WEBGL_draw_buffers','WEBGL_draw_instanced_base_vertex_base_instance','WEBGL_multi_draw_instanced_base_vertex_base_instance','EXT_disjoint_timer_query_webgl2']) gl.getExtension(name);
+	for (const name of (gl.getSupportedExtensions() || []).filter(name => known.includes(name))) gl.getExtension(name);
+	gl.getExtension('OVR_multiview2');
+	const parallel = gl.getExtension('KHR_parallel_shader_compile');
+	const list = JSON.parse(data);
+	const sources = list.sources.map(runs => {
+		const lines = [];
+		for (let index = 0; index < runs.length; index += 2) for (let line = 0; line < runs[index + 1]; line++) lines.push(list.lines[runs[index] + line]);
+		return lines.join('\\n');
+	});
+	// Fed to the GPU a few at a time: queuing them all at once keeps the browser's GPU process so busy that the page
+	// (and its loading bar) stops drawing for a couple of seconds.
+	const build = entry => {
+		const program = gl.createProgram();
+		for (const id of entry.s) {
+			const shader = gl.createShader(sources[id].includes('gl_Position') ? gl.VERTEX_SHADER : gl.FRAGMENT_SHADER);
+			gl.shaderSource(shader, sources[id]);
+			gl.compileShader(shader);
+			gl.attachShader(program, shader);
+		}
+		for (const [location, name] of entry.at) gl.bindAttribLocation(program, location, name);
+		gl.linkProgram(program);
+		return program;
+	};
+	const BATCH = 12;
+	const programs = [];
+	self.postMessage({total: list.programs.length});
+	for (let first = 0; first < list.programs.length; first += BATCH) {
+		const batch = list.programs.slice(first, first + BATCH).map(build);
+		programs.push(...batch);
+		if (parallel) {
+			while (batch.some(program => !gl.getProgramParameter(program, parallel.COMPLETION_STATUS_KHR))) await new Promise(resolve => setTimeout(resolve, 4));
+		} else {
+			for (const program of batch) gl.getProgramParameter(program, gl.LINK_STATUS);
+		}
+		self.postMessage({done: programs.length});
+		await new Promise(resolve => setTimeout(resolve, 4));
+	}
+	const linked = programs.filter(program => gl.getProgramParameter(program, gl.LINK_STATUS)).length;
+	self.postMessage({finished: true, linked, ms: performance.now() - started});
+};`;
+	fetch('shaders.json?build=35f4a6a6d004d350').then(response => response.ok ? response.text() : Promise.reject(new Error(`shader list ${response.status}`))).then(text => {
+		const started = state.startedAt = Math.round(performance.now());
+		const thread = new Worker(URL.createObjectURL(new Blob([worker], {type: 'text/javascript'})));
+		thread.onmessage = ({data}) => {
+			if (data.error) { state.error = data.error; state.finished = true; thread.terminate(); return; }
+			if (data.total !== undefined) state.total = data.total;
+			if (data.done !== undefined) state.done = data.done;
+			if (data.finished) {
+				Object.assign(state, {finished: true, linked: data.linked, ms: Math.round(performance.now() - started), finishedAt: Math.round(performance.now())});
+				thread.terminate();
+			}
+		};
+		thread.onerror = event => { state.error = String(event.message || 'worker failed'); state.finished = true; };
+		thread.postMessage(text);
+	}).catch(error => { state.error = String(error.message || error); state.finished = true; });
+})();
+</script>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
 		<title>Velocity Horizon</title>
@@ -140,7 +260,7 @@ body {
 @keyframes bump-green{0%{opacity:0}20%{opacity:1;border-color:#6dff7e;box-shadow:0 0 18px #2fe04e,inset 0 0 12px #2fe04ecc}100%{opacity:0;border-color:#6dff7e}}
 @keyframes meter-alert{0%{opacity:1}25%{opacity:.3}40%{opacity:1}55%{opacity:.3}70%{opacity:1}100%{opacity:0}}
 #race-ghost{position:absolute;top:100%;right:3%;width:25%;margin-top:.5cqw;text-align:center;font-size:max(2.6cqw,13px);line-height:1.1}#race-ghost[hidden]{display:none}#race-ghost small{font-size:.58em;color:#9fd2ff;letter-spacing:.08em;margin-right:.45em}#race-ghost.ahead b{color:#7dffa0}#race-ghost.behind b{color:#ff8f7d}
-</style><meta name="velocity-build" content="b6b4326f14298f51"><style id="velocity-loading-style">#status {
+</style><meta name="velocity-build" content="35f4a6a6d004d350"><style id="velocity-loading-style">#status {
  position:fixed; inset:0; z-index:100; overflow:hidden; visibility:visible;
  background:#060b0d; opacity:1; animation:loading-enter .6s ease-out both;
  transition:opacity .6s ease; font-family:Velocity,system-ui,sans-serif;
@@ -152,19 +272,20 @@ body {
 #loading-panel {position:absolute;z-index:2;left:max(7%,env(safe-area-inset-left));right:max(7%,env(safe-area-inset-right));bottom:max(5%,env(safe-area-inset-bottom));height:clamp(40px,5vw,76px)}
 #loading-track {position:absolute;inset:0;isolation:isolate}
 #loading-track::before {content:'';position:absolute;inset:31% 0;border:2px solid #ff382a;border-radius:18px 4px;transform:skewX(-24deg);background:#13080bb3;box-shadow:0 0 7px #ff2616,inset 0 0 7px #ff261666}
-#loading-fill {position:absolute;left:0;top:27%;height:46%;width:0;opacity:var(--has-progress,0);background:url('loading/bar-fill.png?v=014754338867') right center/100% 100% no-repeat;transition:width .4s ease-out;filter:drop-shadow(0 0 7px #ff492c88);border-radius:18px 4px;transform:skewX(-24deg);transform-origin:left center}
-#loading-fill::after {content:'';position:absolute;right:-14px;top:-30%;width:34px;height:160%;background:radial-gradient(ellipse,#fff7d9,#ffa45d99 22%,#ff321e44 48%,transparent 72%);animation:loading-pulse 1.4s ease-in-out infinite alternate;opacity:var(--has-progress,0);transform:skewX(24deg)}
+#loading-fill {position:absolute;left:0;top:27%;height:46%;width:100%;opacity:var(--has-progress,0);background:url('loading/bar-fill.png?v=014754338867') right center/100% 100% no-repeat;filter:drop-shadow(0 0 7px #ff492c88);border-radius:18px 4px;transform:skewX(-24deg) scaleX(0);transform-origin:left center;will-change:transform}
+#loading-head {position:absolute;left:0;top:27%;height:46%;width:100%;pointer-events:none;opacity:var(--has-progress,0);transform:translateX(-100%);will-change:transform}
+#loading-head::after {content:'';position:absolute;right:-14px;top:-30%;width:34px;height:160%;background:radial-gradient(ellipse,#fff7d9,#ffa45d99 22%,#ff321e44 48%,transparent 72%);animation:loading-pulse 1.4s ease-in-out infinite alternate}
 #loading-track[data-unknown=true]::after {content:'';position:absolute;left:0;top:29%;width:16%;height:42%;background:linear-gradient(90deg,transparent,#ff9c6f99,transparent);filter:blur(3px);animation:loading-scan 2s ease-in-out infinite}
 #status-phase {position:absolute;z-index:3;left:max(7%,env(safe-area-inset-left));right:14%;bottom:calc(max(5%,env(safe-area-inset-bottom)) + clamp(40px,5vw,76px));font-size:clamp(13px,1.2vw,20px);font-weight:600;letter-spacing:.07em;color:#f7e7df;text-shadow:0 2px 8px #000;line-height:1.4}
 #loading-percent {position:absolute;right:0;bottom:100%;color:#ffe2c5;font-size:clamp(13px,1.2vw,20px);font-variant-numeric:tabular-nums;line-height:1.4}
 #status-notice {position:relative;z-index:4;max-width:600px;max-height:65%;overflow:auto;background:#150e11e8;border-color:#ff6c48;color:#fff2e9}
 #status.loading-failed #loading-panel {display:none}
-#status.loading-leaving {opacity:0}
+#status.loading-leaving {opacity:0;transition-duration:.42s}
 @keyframes loading-enter {from{opacity:0}to{opacity:1}}
 @keyframes loading-pulse {from{transform:scale(.8);opacity:.65}to{transform:scale(1.15);opacity:1}}
 @keyframes loading-scan {from{transform:translateX(-100%)}to{transform:translateX(625%)}}
 @media(orientation:portrait){#loading-art{object-position:57% top}#loading-panel{left:6%;right:6%;bottom:max(8%,env(safe-area-inset-bottom))}#status-phase{left:6%;right:18%;bottom:calc(max(8%,env(safe-area-inset-bottom)) + 45px);font-size:13px;letter-spacing:.02em}}
-@media(prefers-reduced-motion:reduce){#status,#loading-art,#loading-fill{animation:none;transition:none}#loading-fill::after,#loading-track::after{animation:none!important}}
+@media(prefers-reduced-motion:reduce){#status,#loading-art,#loading-fill,#loading-head{animation:none;transition:none}#loading-head::after,#loading-track::after{animation:none!important}}
 </style></head>
 	<body>
 		<canvas id="canvas" width="1920" height="1080">
@@ -176,7 +297,7 @@ body {
 		</noscript>
 
 		<div id="status"><img id="loading-art" src="loading/background.jpg?v=014754338867" alt="" fetchpriority="high" decoding="async">
-<div id="loading-panel"><div id="loading-track" role="progressbar" aria-label="Loading your run" aria-valuemin="0" aria-valuemax="100" data-unknown="true"><div id="loading-fill"></div></div><span id="loading-percent" aria-hidden="true"></span></div>
+<div id="loading-panel"><div id="loading-track" role="progressbar" aria-label="Loading your run" aria-valuemin="0" aria-valuemax="100" data-unknown="true"><div id="loading-fill"></div><div id="loading-head"></div></div><span id="loading-percent" aria-hidden="true"></span></div>
 			
 			<progress id="status-progress"></progress>
 			<div id="status-notice"></div>
@@ -184,7 +305,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":85760120,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":85649420,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -201,49 +322,92 @@ const loadingUI = (() => {
  const track = document.getElementById('loading-track');
  if (!track) return {report() {}, finish(done) {done();}, fail() {}};
  const fill = document.getElementById('loading-fill');
+ const head = document.getElementById('loading-head');
  const percent = document.getElementById('loading-percent');
  const art = document.getElementById('loading-art');
  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- let progress = 0;
+ // While the game starts up, the page's main thread stalls for seconds at a time, so the bar never waits for reports.
+ // It always glides toward 97% on the compositor (CSS transform transitions run off the main thread), paced by the
+ // expected time left on a first visit: the download's measured byte rate plus the usual start-up time after it.
+ // It is re-paced (inside requestAnimationFrame, so the change reaches the compositor that frame) only while the
+ // download runs: once the engine blocks the main thread, the compositor's and the main thread's idea of a running
+ // transition drift apart, and re-aiming from the main thread's makes the bar jump.
+ const after = {'engine-download':12, 'engine-start':12, 'initial-sector':8.5, 'render-warmup':4, 'water-warmup':1.8, 'game-start':1};
+ let estimate = 0, queued = false, paced = 0;
+ const download = {bytes: 0, total: 0, since: 0, last: 0};
+ const names = {'engine-download':'Downloading your run', 'engine-start':'Starting your run',
+  'initial-sector':'Preparing the trail', 'render-warmup':'Preparing the landscape',
+  'water-warmup':'Preparing water and speed effects', 'game-start':'Ready to run'};
+ let shown = 0, aim = 0, started = false;
  statusOverlay.setAttribute('aria-busy','true');
  const reveal = () => statusOverlay.classList.add('art-ready');
  if (art.complete && art.naturalWidth) reveal();
  else art.addEventListener('load', reveal, {once:true});
- function paint(value) {
-  progress = Math.max(progress, Math.min(1, value));
-  fill.style.width = `${progress * 100}%`;
-  fill.style.setProperty('--has-progress', progress > 0 ? '1' : '0');
+ const log = window.__loadingBarLog = [];
+ function glide(target, seconds, easing) {
+  log.push([Math.round(performance.now()), +target.toFixed(3), +seconds.toFixed(2)]);
+  target = Math.max(aim, Math.min(1, target));
+  if (target <= aim + 0.0005 && seconds > 0) return;
+  aim = target;
+  const timing = reduced ? 'none' : `transform ${Math.max(0.05, seconds).toFixed(2)}s ${easing}`;
+  fill.style.transition = head.style.transition = timing;
+  fill.style.transform = `skewX(-24deg) scaleX(${target})`;
+  head.style.transform = `translateX(${(target - 1) * 100}%)`;
+  if (!started) { started = true; track.style.setProperty('--has-progress', '1'); }
  }
+ function measure() {  // the bar's actual (animated) position, for the percentage
+  const matrix = new DOMMatrixReadOnly(getComputedStyle(head).transform);
+  return Math.max(0, Math.min(1, 1 + matrix.m41 / Math.max(1, head.offsetWidth)));
+ }
+ (function tick() {
+  if (started) {
+   shown = Math.max(shown, measure());
+   percent.textContent = `${Math.floor(shown * 100)}%`;
+   track.setAttribute('aria-valuenow', String(Math.floor(shown * 100)));
+  }
+  if (!statusOverlay.classList.contains('loading-leaving')) requestAnimationFrame(tick);
+ })();
+ function repace() {
+  queued = false;
+  const now = performance.now();
+  if (now - download.last > 300 && download.last) return;  // stale: the engine has taken over the main thread
+  if (paced && now - paced < 400) { queue(); return; }  // at most a couple of times a second
+  paced = now;
+  // A transition only restarts when the value changes, so each re-pace aims a hair further on.
+  glide(Math.max(.97, aim + .0006), estimate * 1.25, 'cubic-bezier(.3,.25,.6,1)');
+ }
+ function queue() { if (!queued) { queued = true; requestAnimationFrame(repace); } }
+ estimate = 4 + after['engine-download'];
+ queue();  // moving from the first frame
  function report(phase, completed, total) {
-  const ranges = {'engine-download':[0,.42], 'engine-start':[.42,.02],
-   'initial-sector':[.44,.06], 'render-warmup':[.50,.40],
-   'water-warmup':[.90,.08], 'game-start':[.98,0]};
-  const [base, span] = ranges[phase] || [progress, 0];
   const known = total > 0;
-  const fraction = known ? Math.max(0, Math.min(1, completed / total)) : 0;
-  paint(base + span * fraction);
-  track.dataset.unknown = String(!known);
-  percent.textContent = known ? `${Math.floor(progress * 100)}%` : '';
-  if (known) track.setAttribute('aria-valuenow', String(Math.floor(progress * 100)));
-  else track.removeAttribute('aria-valuenow');
-  const names = {'engine-download':'Downloading your run', 'engine-start':'Starting your run',
-   'initial-sector':'Preparing the trail', 'render-warmup':'Preparing the landscape',
-   'water-warmup':'Preparing water and speed effects', 'game-start':'Ready to run'};
+  if (phase === 'engine-download') {
+   const now = performance.now();
+   download.since ||= now;
+   download.last = now;
+   if (known) Object.assign(download, {bytes: completed, total});
+   const seconds = (now - download.since) / 1000;
+   const rate = download.bytes > 0 && seconds > 0.2 ? download.bytes / seconds : 0;
+   const left = rate ? (download.total - download.bytes) / rate : 4;
+   estimate = Math.min(60, left + after['engine-download']);
+   queue();
+  }
+  // Once the engine starts, re-aiming could make it jump (see above), so the glide set during the download just runs on.
+  track.dataset.unknown = String(false);
   const label = names[phase] || 'Preparing your run';
   if (phaseLabel.textContent !== label) phaseLabel.textContent = label;
   return true;
  }
  function finish(done) {
-  paint(1);
-  track.dataset.unknown = 'false';
-  track.setAttribute('aria-valuenow','100');
+  glide(1, 0.25, 'ease-out');
   percent.textContent = '100%';
+  track.setAttribute('aria-valuenow','100');
   phaseLabel.textContent = 'Ready to run';
   setTimeout(() => {
    if (statusOverlay.classList.contains('loading-failed')) return;
    statusOverlay.classList.add('loading-leaving');
-   setTimeout(done, reduced ? 0 : 620);
-  }, reduced ? 0 : 420);
+   setTimeout(done, reduced ? 0 : 420);
+  }, reduced ? 0 : 260);
  }
  function fail() {
   statusOverlay.classList.remove('loading-leaving');
@@ -513,7 +677,7 @@ const loadingUI = (() => {
     api.unlock_audio = unlockAudio;
     // Relative pages work on any host the build is served from; the home link is the public address.
     window.__velocitySiteLinks = '<p class="site-links"><a href="https://vh.hobbyhood.app" target="_blank" rel="noopener">vh.hobbyhood.app</a> · '
-        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v54</span></p>';
+        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v59</span></p>';
     if (!enabled) return;
     const meta = document.querySelector('meta[name=viewport]');
     if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
@@ -760,7 +924,7 @@ const loadingUI = (() => {
     const state = window.__velocityMobile.state;
     const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
     // In the game only runs of this exact version are shown and submitted; older versions are on the website.
-    const version = 'v54';
+    const version = 'v59';
     const validBase = /^(https:\/\/|http:\/\/(127\.0\.0\.1|localhost)[:/])\S*$/.test(base);
     // Local development builds never talk to the production board (the Worker only allows the real site's origin).
     const remote = validBase && (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /^http:\/\/(127\.0\.0\.1|localhost)[:/]/.test(base));
@@ -801,7 +965,9 @@ const loadingUI = (() => {
     const ghostKey = 'velocity.ghost.' + version;
     function useGhost(ghost) {
         if (!ghost || typeof ghost.data !== 'string') return;
-        window.__velocityGhost = {...ghost, serial: (window.__velocityGhost?.serial || 0) + 1};
+        const current = window.__velocityGhost;
+        if (current && current.time === ghost.time && current.name === ghost.name && current.data === ghost.data) return;
+        window.__velocityGhost = {...ghost, serial: (current?.serial || 0) + 1};
     }
     async function loadGhost() {
         try {
@@ -810,10 +976,12 @@ const loadingUI = (() => {
                 if (key?.startsWith('velocity.ghost.') && key !== ghostKey) localStorage.removeItem(key);
             }
         } catch { /* private mode */ }
-        try { useGhost(remote ? (await request('/ghost?version=' + encodeURIComponent(version))).ghost : store.get(ghostKey, null)); }
+        try { useGhost(remote ? (await request('/ghost?version=' + encodeURIComponent(version), {cache: 'no-store'})).ghost : store.get(ghostKey, null)); }
         catch { /* race without a ghost */ }
     }
     loadGhost();
+    // The game asks again each time a run restarts, so a new fastest run on the board becomes the ghost straight away.
+    window.__velocityRefreshGhost = () => { loadGhost(); };
 
     const panel = document.createElement('div');
     panel.id = 'lb'; panel.hidden = true;
@@ -946,8 +1114,8 @@ const loadingUI = (() => {
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=b6b4326f14298f51",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=b6b4326f14298f51" : name, size])),
+			'mainPack': "index.pck?build=35f4a6a6d004d350",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=35f4a6a6d004d350" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

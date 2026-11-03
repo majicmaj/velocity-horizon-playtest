@@ -1,5 +1,40 @@
 [
  {
+  "version": 59,
+  "commit": "ecc5133",
+  "date": "2026-11-03",
+  "subject": "Faster, smoother first load: skip never-drawn default shaders, pre-compile the build's shaders during download, compositor-driven loading bar",
+  "body": ""
+ },
+ {
+  "version": 58,
+  "commit": "3c1645a",
+  "date": "2026-11-03",
+  "subject": "Ladybugs +5 km/h, beetles +5% meter, and each restart races the board's latest best ghost",
+  "body": ""
+ },
+ {
+  "version": 57,
+  "commit": "fa8fe0a",
+  "date": "2026-11-03",
+  "subject": "Gate Keep: solid castle outside, no stair or hall turn, raised super beetle with a bigger pickup and a new reward",
+  "body": ""
+ },
+ {
+  "version": 56,
+  "commit": "a3a78d6",
+  "date": "2026-11-03",
+  "subject": "Gate Keep: wide soft valleys before and after the castle, a winding rolling climb, and an exit jump onto the main trail",
+  "body": ""
+ },
+ {
+  "version": 55,
+  "commit": "7663a26",
+  "date": "2026-11-02",
+  "subject": "Record the course bake produced by the v54 publish gate",
+  "body": ""
+ },
+ {
   "version": 54,
   "commit": "47a7fcd",
   "date": "2026-11-02",

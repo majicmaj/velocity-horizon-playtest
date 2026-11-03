@@ -1,5 +1,19 @@
 [
  {
+  "version": 62,
+  "commit": "b8bf2f3",
+  "date": "2026-11-03",
+  "subject": "Fly-over super beetle: tower summit at about 190 m in the path of 550+ km/h ramp jumps; summit leap and ledge removed",
+  "body": ""
+ },
+ {
+  "version": 61,
+  "commit": "960d18e",
+  "date": "2026-11-03",
+  "subject": "Balance patch: bugs +2, 1000 km/h boost ceiling with full Shift jolts, taller tower, bigger beetle pickup with a visible ring, plain exit ramp",
+  "body": ""
+ },
+ {
   "version": 60,
   "commit": "602ae20",
   "date": "2026-11-03",

@@ -47,7 +47,7 @@
 })();
 </script><script>// Pre-compiles the game's shader programs while the engine is still downloading. Through ANGLE/Direct3D a first visit
 // spends about 80 ms per program, and Godot compiles them one at a time, each blocking a frame. The build records the
-// exact programs Godot compiles (tools/web_shader_capture.py) into shaders.json?build=35f4a6a6d004d350; a worker here compiles them all in
+// exact programs Godot compiles (tools/web_shader_capture.py) into shaders.json?build=0e7ee8275e56b580; a worker here compiles them all in
 // an offscreen WebGL2 context with KHR_parallel_shader_compile, so the browser builds them in parallel (about 1.8 s
 // for 120 programs instead of 8 s) and keeps the results in its program cache, where Godot's identical compiles later
 // find them. Programs this device would generate differently are simply compiled by Godot as before.
@@ -107,7 +107,7 @@ self.onmessage = async ({data}) => {
 	const linked = programs.filter(program => gl.getProgramParameter(program, gl.LINK_STATUS)).length;
 	self.postMessage({finished: true, linked, ms: performance.now() - started});
 };`;
-	fetch('shaders.json?build=35f4a6a6d004d350').then(response => response.ok ? response.text() : Promise.reject(new Error(`shader list ${response.status}`))).then(text => {
+	fetch('shaders.json?build=0e7ee8275e56b580').then(response => response.ok ? response.text() : Promise.reject(new Error(`shader list ${response.status}`))).then(text => {
 		const started = state.startedAt = Math.round(performance.now());
 		const thread = new Worker(URL.createObjectURL(new Blob([worker], {type: 'text/javascript'})));
 		thread.onmessage = ({data}) => {
@@ -311,7 +311,7 @@ body {
 @keyframes bump-green{0%{opacity:0}20%{opacity:1;border-color:#6dff7e;box-shadow:0 0 18px #2fe04e,inset 0 0 12px #2fe04ecc}100%{opacity:0;border-color:#6dff7e}}
 @keyframes meter-alert{0%{opacity:1}25%{opacity:.3}40%{opacity:1}55%{opacity:.3}70%{opacity:1}100%{opacity:0}}
 #race-ghost{position:absolute;top:100%;right:3%;width:25%;margin-top:.5cqw;text-align:center;font-size:max(2.6cqw,13px);line-height:1.1}#race-ghost[hidden]{display:none}#race-ghost small{font-size:.58em;color:#9fd2ff;letter-spacing:.08em;margin-right:.45em}#race-ghost.ahead b{color:#7dffa0}#race-ghost.behind b{color:#ff8f7d}
-</style><meta name="velocity-build" content="35f4a6a6d004d350"><style id="velocity-loading-style">#status {
+</style><meta name="velocity-build" content="0e7ee8275e56b580"><style id="velocity-loading-style">#status {
  position:fixed; inset:0; z-index:100; overflow:hidden; visibility:visible;
  background:#060b0d; opacity:1; animation:loading-enter .6s ease-out both;
  transition:opacity .6s ease; font-family:Velocity,system-ui,sans-serif;
@@ -356,7 +356,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":85649420,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":85650688,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -731,7 +731,7 @@ const loadingUI = (() => {
     api.unlock_audio = unlockAudio;
     // Relative pages work on any host the build is served from; the home link is the public address.
     window.__velocitySiteLinks = '<p class="site-links"><a href="https://vh.hobbyhood.app" target="_blank" rel="noopener">vh.hobbyhood.app</a> · '
-        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v60</span></p>';
+        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v62</span></p>';
     if (!enabled) return;
     const meta = document.querySelector('meta[name=viewport]');
     if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
@@ -914,9 +914,9 @@ const loadingUI = (() => {
         lastTime=now;
         hud.hidden=false; hud.classList.toggle('touch',!!state.enabled); decorate();
         const ladybugs = state.ladybugs || 0, beetles = state.beetles || 0;
-        if (ladybugs > lastLadybugs) toast(`MAX SPEED +${ladybugs-lastLadybugs} km/h · LADYBUG`);
-        else if (beetles > lastBeetles) toast(`MAX BOOST +${beetles-lastBeetles}% · BEETLE`);
-        if (state.super_beetle && !lastSuper) toast('SUPER BEETLE · MAX BOOST +25% · RECHARGE +25%');
+        if (ladybugs > lastLadybugs) toast(`MAX SPEED +${2*(ladybugs-lastLadybugs)} km/h · LADYBUG`);
+        else if (beetles > lastBeetles) toast(`MAX BOOST +${2*(beetles-lastBeetles)}% · BEETLE`);
+        if (state.super_beetle && !lastSuper) toast('SUPER BEETLE · MAX BOOST +50% · BOOST FULL · TOP SPEED +50 KM/H');
         lastSuper = !!state.super_beetle;
         lastLadybugs=ladybugs; lastBeetles=beetles;
         const time = state.time || 0;
@@ -945,7 +945,7 @@ const loadingUI = (() => {
         const target = find(kind ? 'race-meter-alert' : 'race-speed'), cls = kind ? 'bump-green' : 'bump-red';
         target.classList.remove(cls); void target.offsetWidth; target.classList.add(cls);
         const [x, y] = center(target), plus = document.createElement('div');
-        plus.className = 'pickup-plus ' + (kind ? 'green' : 'red'); plus.textContent = kind ? '+1%' : '+1 km/h';
+        plus.className = 'pickup-plus ' + (kind ? 'green' : 'red'); plus.textContent = kind ? '+2%' : '+2 km/h';  // tools/../scripts/bug_collectibles.gd: LADYBUG_KMH, BEETLE_METER
         plus.style.left = x + 'px'; plus.style.top = y + 'px'; document.body.appendChild(plus);
         plus.addEventListener('animationend', () => plus.remove());
     }
@@ -978,7 +978,7 @@ const loadingUI = (() => {
     const state = window.__velocityMobile.state;
     const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
     // In the game only runs of this exact version are shown and submitted; older versions are on the website.
-    const version = 'v60';
+    const version = 'v62';
     const validBase = /^(https:\/\/|http:\/\/(127\.0\.0\.1|localhost)[:/])\S*$/.test(base);
     // Local development builds never talk to the production board (the Worker only allows the real site's origin).
     const remote = validBase && (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /^http:\/\/(127\.0\.0\.1|localhost)[:/]/.test(base));
@@ -1168,8 +1168,8 @@ const loadingUI = (() => {
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=35f4a6a6d004d350",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=35f4a6a6d004d350" : name, size])),
+			'mainPack': "index.pck?build=0e7ee8275e56b580",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=0e7ee8275e56b580" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

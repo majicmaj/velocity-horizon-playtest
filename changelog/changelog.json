@@ -1,5 +1,19 @@
 [
  {
+  "version": 54,
+  "commit": "47a7fcd",
+  "date": "2026-11-02",
+  "subject": "Solid terrain everywhere, a hidden water-level castle route, gap-free stair, free stair speed, faster load",
+  "body": "- Every drawn terrain column is collision now (was only ~260 m either side of the trail), and a runner falling more\n  than 4 m below the real ground anywhere is put back on top; nothing falls through the world.\n- Gate Keep: no carving on the lake (no ground strip across the water), the trail leaves through a water-level cut in\n  the west shore, the ribbon follows the real terrain and is not drawn on the water, and there is no fork sign.\n- Stair: treads meet the newel and the wall, and the terrace slices start exactly where the last tread arrives, so the\n  last step has no hole or lip. The 43 km/h stair cap is removed and the spiral's slope no longer slows the climb.\n- Loading: sector downloads read whole files per poll instead of 64 KB per frame, which timed out during startup and\n  held the first stretch of course for ~30 s. Warmup batches now report their timing.\n- New terrain coverage test (4,010 probes, 0 holes); tower test checks stair speed and floor continuity."
+ },
+ {
+  "version": 53,
+  "commit": "488a642",
+  "date": "2026-11-02",
+  "subject": "Record the course bake produced by the v52 publish gate",
+  "body": ""
+ },
+ {
   "version": 52,
   "commit": "afb46fd",
   "date": "2026-11-02",

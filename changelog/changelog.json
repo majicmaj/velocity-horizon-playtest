@@ -1,5 +1,54 @@
 [
  {
+  "version": 69,
+  "commit": "0038bea",
+  "date": "2026-11-03",
+  "subject": "Guard neighboring terrain readiness and invalidate mismatched sector caches",
+  "body": ""
+ },
+ {
+  "version": 68,
+  "commit": "1eca076",
+  "date": "2026-11-03",
+  "subject": "Fix Gate Keep stream shores and waterfall contact",
+  "body": ""
+ },
+ {
+  "version": 67,
+  "commit": "85a27a3",
+  "date": "2026-11-03",
+  "subject": "Agent workflow guide: develop, show screenshots, commit to next, publish",
+  "body": ""
+ },
+ {
+  "version": 66,
+  "commit": "2315775",
+  "date": "2026-11-03",
+  "subject": "Gate Keep stream as lake-water pools and waterfall drops beside the causeway ramp; exit ramp always launches (no floor snap at the lip)",
+  "body": ""
+ },
+ {
+  "version": 65,
+  "commit": "ea3fa20",
+  "date": "2026-11-03",
+  "subject": "Gate Keep surroundings: mountain stream gorge, cascade and ford, rock outcrops, denser forest, warmer Gate Keep light and haze",
+  "body": ""
+ },
+ {
+  "version": 64,
+  "commit": "fdb50e5",
+  "date": "2026-11-03",
+  "subject": "Gate Keep polish: wider lake entrance with a plain chase camera, open causeway ramp with real-size parapets, castle string courses, corbels, sills, lit windows, gate torches and tower battlements",
+  "body": ""
+ },
+ {
+  "version": 63,
+  "commit": "745ccfe",
+  "date": "2026-11-03",
+  "subject": "Record the course bake produced by the v62 publish gate",
+  "body": ""
+ },
+ {
   "version": 62,
   "commit": "b8bf2f3",
   "date": "2026-11-03",

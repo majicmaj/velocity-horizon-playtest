@@ -1,5 +1,26 @@
 [
  {
+  "version": 76,
+  "commit": "944f82e",
+  "date": "2026-11-05",
+  "subject": "Remove repeating terrain patterns with shared stochastic sampling",
+  "body": "Keep colour, macro masks and normal detail on world-anchored patches; restore leaf-litter mipmaps and enforce the material contract across future sessions with source and GPU checks."
+ },
+ {
+  "version": 75,
+  "commit": "5ab2e20",
+  "date": "2026-11-05",
+  "subject": "Smooth the castle river approach beyond the coarse terrain cut",
+  "body": "Cover the full excavated terrain footprint with a graded bank apron and test the combined road surface across its width."
+ },
+ {
+  "version": 74,
+  "commit": "0cc312f",
+  "date": "2026-11-05",
+  "subject": "Repair the castle ford approach ground and exposed bank joins",
+  "body": "Exclude intersecting dirt overlays from the replacement river ground and join exposed bank edges to the supporting terrain with matching collision. Add failing-before regression probes, inspect matched screenshots and record the full gate and controlled browser comparisons."
+ },
+ {
   "version": 73,
   "commit": "4d1572f",
   "date": "2026-11-04",

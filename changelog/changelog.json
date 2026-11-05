@@ -1,5 +1,19 @@
 [
  {
+  "version": 71,
+  "commit": "cf49447",
+  "date": "2026-11-04",
+  "subject": "Correct terrain planting and restore detailed trees on branch trails",
+  "body": "Use rendered support planes and bounded local rotations for vegetation. Blend branch soil with the main terrain, retain detailed crowns from overhead, and preserve rotated billboard bounds through baking. Verify route clearance and record matched captures and 1080p browser results."
+ },
+ {
+  "version": 70,
+  "commit": "ba8c5bd",
+  "date": "2026-11-03",
+  "subject": "Record the course bake produced by the v69 publish gate",
+  "body": ""
+ },
+ {
   "version": 69,
   "commit": "0038bea",
   "date": "2026-11-03",

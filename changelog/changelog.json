@@ -1,5 +1,19 @@
 [
  {
+  "version": 73,
+  "commit": "4d1572f",
+  "date": "2026-11-04",
+  "subject": "Match distant tree lighting and seasonal colour to the detailed models",
+  "body": "Capture green/autumn side and canopy endpoints under production lighting, preserve trunk colour and filter premultiplied coverage. Guard capture inputs and verify actual model/card colours, matched screenshots and the exported 1080p browser build."
+ },
+ {
+  "version": 72,
+  "commit": "54beea0",
+  "date": "2026-11-04",
+  "subject": "Record the course bake produced by the v71 publish gate",
+  "body": "Record the browser-tested release bake and verified live artifact hashes."
+ },
+ {
   "version": 71,
   "commit": "cf49447",
   "date": "2026-11-04",

@@ -1,5 +1,12 @@
 [
  {
+  "version": 77,
+  "commit": "ece3903",
+  "date": "2026-11-06",
+  "subject": "Support mapped controllers and Android HID input",
+  "body": "Add analog driving, triggers, D-pad and face-button actions, controller-driven browser menus, neutral gating, reconnect/focus safety and keyboard-mode HID fallback. Exercise native snapshots and actual exported WebGL input with a virtual slot-2 gamepad."
+ },
+ {
   "version": 76,
   "commit": "944f82e",
   "date": "2026-11-05",

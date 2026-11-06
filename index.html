@@ -47,7 +47,7 @@
 })();
 </script><script>// Pre-compiles the game's shader programs while the engine is still downloading. Through ANGLE/Direct3D a first visit
 // spends about 80 ms per program, and Godot compiles them one at a time, each blocking a frame. The build records the
-// exact programs Godot compiles (tools/web_shader_capture.py) into shaders.json?build=ec22020720c70648; a worker here compiles them all in
+// exact programs Godot compiles (tools/web_shader_capture.py) into shaders.json?build=fb99448d726466f5; a worker here compiles them all in
 // an offscreen WebGL2 context with KHR_parallel_shader_compile, so the browser builds them in parallel (about 1.8 s
 // for 120 programs instead of 8 s) and keeps the results in its program cache, where Godot's identical compiles later
 // find them. Programs this device would generate differently are simply compiled by Godot as before.
@@ -107,7 +107,7 @@ self.onmessage = async ({data}) => {
 	const linked = programs.filter(program => gl.getProgramParameter(program, gl.LINK_STATUS)).length;
 	self.postMessage({finished: true, linked, ms: performance.now() - started});
 };`;
-	fetch('shaders.json?build=ec22020720c70648').then(response => response.ok ? response.text() : Promise.reject(new Error(`shader list ${response.status}`))).then(text => {
+	fetch('shaders.json?build=fb99448d726466f5').then(response => response.ok ? response.text() : Promise.reject(new Error(`shader list ${response.status}`))).then(text => {
 		const started = state.startedAt = Math.round(performance.now());
 		const thread = new Worker(URL.createObjectURL(new Blob([worker], {type: 'text/javascript'})));
 		thread.onmessage = ({data}) => {
@@ -311,7 +311,7 @@ body {
 @keyframes bump-green{0%{opacity:0}20%{opacity:1;border-color:#6dff7e;box-shadow:0 0 18px #2fe04e,inset 0 0 12px #2fe04ecc}100%{opacity:0;border-color:#6dff7e}}
 @keyframes meter-alert{0%{opacity:1}25%{opacity:.3}40%{opacity:1}55%{opacity:.3}70%{opacity:1}100%{opacity:0}}
 #race-ghost{position:absolute;top:100%;right:3%;width:25%;margin-top:.5cqw;text-align:center;font-size:max(2.6cqw,13px);line-height:1.1}#race-ghost[hidden]{display:none}#race-ghost small{font-size:.58em;color:#9fd2ff;letter-spacing:.08em;margin-right:.45em}#race-ghost.ahead b{color:#7dffa0}#race-ghost.behind b{color:#ff8f7d}
-</style><meta name="velocity-build" content="ec22020720c70648"><style id="velocity-loading-style">#status {
+</style><meta name="velocity-build" content="fb99448d726466f5"><style id="velocity-loading-style">#status {
  position:fixed; inset:0; z-index:100; overflow:hidden; visibility:visible;
  background:#060b0d; opacity:1; animation:loading-enter .6s ease-out both;
  transition:opacity .6s ease; font-family:Velocity,system-ui,sans-serif;
@@ -356,7 +356,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":88894668,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":0,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":88899232,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -702,7 +702,7 @@ const loadingUI = (() => {
     function pause(value) { clear(); state.paused = value; state.pause_serial++; }
     const api = window.__velocityMobile = {state, core, tick() {
         core.tick(performance.now());
-        const active = new Set(held.values()), tilt = core.mode === 'tilt' && core.calibrated;
+        const active = new Set(held.values()), tilt = !state.controller_active && core.mode === 'tilt' && core.calibrated;
         state.mode = core.mode;
         state.throttle = Math.max(tilt ? core.throttle : 0, Math.max(0, -stick.y));
         state.brake = Math.max(tilt ? core.brake : 0, Math.max(0, stick.y), active.has('reverse') ? 1 : 0);
@@ -731,7 +731,7 @@ const loadingUI = (() => {
     api.unlock_audio = unlockAudio;
     // Relative pages work on any host the build is served from; the home link is the public address.
     window.__velocitySiteLinks = '<p class="site-links"><a href="https://vh.hobbyhood.app" target="_blank" rel="noopener">vh.hobbyhood.app</a> · '
-        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v76</span></p>';
+        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v77</span></p>';
     if (!enabled) return;
     const meta = document.querySelector('meta[name=viewport]');
     if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
@@ -750,12 +750,13 @@ const loadingUI = (() => {
     <div id="mobile-actions"><button data-action="jump">Jump</button><button data-action="boost">Boost</button><button data-action="drift">Drift</button><button data-action="reverse">Reverse</button></div>
     <div id="mobile-menu"><div id="mobile-panel"><h2>Phone controls</h2><p>Landscape recommended. Tilt forward to run, left/right to steer, back to brake. A quick upward flick jumps.</p>
     <p>Hold the phone at your comfortable playing angle when calibrating. Touch Jump is always available.</p><p id="mobile-status" role="status" aria-live="polite">Choose tilt or touch controls.</p>
-    <div class="choices"><button id="mobile-tilt">Enable tilt / Recenter</button><button id="mobile-touch">Use touch</button><button id="mobile-resume">Resume</button><button id="mobile-restart">Restart run</button><button id="mobile-board">Leaderboard</button></div>
+    <div class="choices"><button id="mobile-tilt">Enable tilt / Recenter</button><button id="mobile-touch">Use touch / keyboard</button><button id="mobile-resume">Resume</button><button id="mobile-restart">Restart run</button><button id="mobile-board">Leaderboard</button></div>
     ${window.__velocitySiteLinks}<label><input id="mobile-invert-steer" type="checkbox"> Invert steering</label><label><input id="mobile-invert-tilt" type="checkbox"> Invert forward / back</label></div></div>`;
     document.body.appendChild(ui);
     const find = id => document.getElementById(id), menu = find('mobile-menu'), status = find('mobile-status');
     function openMenu() { pause(true); menu.hidden = false; find('mobile-pause').textContent = 'Resume'; }
-    function play() { unlockAudio(); request++; core.calibrating = false; pause(false); menu.hidden = true; find('mobile-pause').textContent = 'Pause'; }
+    function play() { unlockAudio(); request++; core.calibrating = false; pause(false); menu.hidden = true; document.getElementById('canvas')?.focus(); find('mobile-pause').textContent = 'Pause'; }
+    api.use_controller = () => { core.mode = 'controller'; core.message = 'Controller: center the stick and release buttons after resuming'; play(); };
     find('mobile-settings').onclick = openMenu;
     find('mobile-pause').onclick = () => { if (state.paused) play(); else openMenu(); };
     find('mobile-resume').onclick = play;
@@ -978,7 +979,7 @@ const loadingUI = (() => {
     const state = window.__velocityMobile.state;
     const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
     // In the game only runs of this exact version are shown and submitted; older versions are on the website.
-    const version = 'v76';
+    const version = 'v77';
     const validBase = /^(https:\/\/|http:\/\/(127\.0\.0\.1|localhost)[:/])\S*$/.test(base);
     // Local development builds never talk to the production board (the Worker only allows the real site's origin).
     const remote = validBase && (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /^http:\/\/(127\.0\.0\.1|localhost)[:/]/.test(base));
@@ -1144,6 +1145,95 @@ const loadingUI = (() => {
 })();
 
 (() => {
+    const mobile = window.__velocityMobile;
+    if (!document.body || !mobile || window.__velocityController) return;
+    const state = {active: false, index: -1, blocked: true, name: '', mapping: ''};
+    const api = window.__velocityController = {state};
+    let previous = [], nextMove = 0, lastMenu = null, focused = 0, windowFocused = document.hasFocus();
+    const visible = el => el && !el.hidden && el.getClientRects().length;
+    const find = id => document.getElementById(id);
+    const pause = value => {
+        if (mobile.state.enabled) {
+            if (value) find('mobile-settings')?.click();
+            else mobile.use_controller?.();
+        } else { mobile.state.paused = value; mobile.state.pause_serial++; }
+    };
+    const note = text => window.__velocityHud?.toast(text);
+    const clear = () => { state.active = false; state.blocked = true; mobile.state.controller_active = false; previous = []; };
+    addEventListener('blur', () => { windowFocused = false; if (state.active) pause(true); clear(); });
+    addEventListener('focus', () => { windowFocused = true; });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { if (state.active) pause(true); clear(); } });
+    addEventListener('pointerdown', () => { state.active = false; }, true);
+    addEventListener('keydown', () => { state.active = false; }, true);
+    const style = document.createElement('style');
+    style.textContent = '.controller-focus{outline:3px solid #64ddff!important;outline-offset:3px}';
+    document.head.appendChild(style);
+    const help = 'Controller: stick / D-pad steer and run; RT run, LT brake / reverse; A / Cross jump; X / Square or LB boost; B / Circle or RB drift; Start pause. Center controls after resuming.';
+    const hints = document.createElement('p'); hints.textContent = help;
+    document.querySelector('.race-keys')?.after(hints);
+    if (find('mobile-panel')) {
+        const button = document.createElement('button'); button.id = 'mobile-controller'; button.textContent = 'Use controller';
+        button.onclick = () => {
+            if (state.index < 0) { find('mobile-status').textContent = 'Pair a gamepad in Android Bluetooth / USB settings, then press a button. If undetected, try its Android / XInput mode, or choose touch / keyboard for keyboard-mode HID.'; return; }
+            mobile.use_controller();
+        };
+        find('mobile-panel').querySelector('.choices').prepend(button);
+        const text = document.createElement('p'); text.textContent = help;
+        find('mobile-panel').appendChild(text);
+    }
+    function frame(now) {
+        requestAnimationFrame(frame);
+        if (!window.__velocityStartup?.state.ready) return;
+        let pads;
+        try { pads = navigator.getGamepads?.() || []; } catch { pads = []; }
+        let pad = pads[state.index];
+        const moving = p => p.buttons.some(b => b.pressed || b.value > .25) || p.axes.slice(0, 2).some(v => Math.abs(v) > .25);
+        for (const candidate of pads) {
+            if (candidate?.connected && candidate.mapping === 'standard' && moving(candidate) && candidate.index !== state.index && (!pad?.connected || !moving(pad))) {
+                pad = candidate; state.index = candidate.index; previous = []; state.active = true;
+                note('Controller connected — release controls to start'); break;
+            }
+        }
+        if (!pad?.connected) {
+            if (state.index >= 0) { if (state.active) pause(true); note('Controller disconnected — reconnect or use touch / keyboard'); }
+            state.index = -1; clear(); return;
+        }
+        state.name = pad.id; state.mapping = pad.mapping;
+        if (!windowFocused || document.hidden) { state.blocked = true; previous = pad.buttons.map(b => b.pressed); return; }
+        const pressed = i => !!pad.buttons[i]?.pressed;
+        const edge = i => pressed(i) && !previous[i];
+        if (moving(pad)) state.active = true;
+        if (mobile.state.enabled && state.active) {
+            mobile.state.controller_active = true;
+            mobile.core.mode = 'controller'; mobile.core.calibrating = false;
+        } else mobile.state.controller_active = false;
+        const menu = visible(find('lb')) ? find('lb') : visible(find('mobile-menu')) ? find('mobile-menu') : visible(find('race-menu')) ? find('race-menu') : null;
+        state.blocked = !!menu || mobile.state.paused || document.hidden;
+        if (state.active) {
+            if (edge(9)) {
+                if (menu?.id === 'lb') find('lb-close')?.click();
+                else pause(!mobile.state.paused);
+            } else if (menu) {
+                const controls = [...menu.querySelectorAll('button,input:not([type=checkbox]),a')].filter(el => visible(el) && !el.disabled);
+                if (menu !== lastMenu) { focused = Math.max(0, controls.findIndex(el => el.id === 'mobile-controller')); nextMove = 0; }
+                const axis = pad.axes[1] || 0;
+                const direction = pressed(13) || pressed(15) || axis > .5 ? 1 : pressed(12) || pressed(14) || axis < -.5 ? -1 : 0;
+                if (direction && now >= nextMove && controls.length) { focused = (focused + direction + controls.length) % controls.length; nextMove = now + 220; }
+                if (!direction) nextMove = 0;
+                menu.querySelectorAll('.controller-focus').forEach(el => el.classList.remove('controller-focus'));
+                const selected = controls[focused];
+                if (selected) { selected.classList.add('controller-focus'); selected.focus({preventScroll:true}); selected.scrollIntoView({block:'nearest'}); }
+                if (edge(0)) selected?.click();
+                if (edge(1)) { if (menu.id === 'lb') find('lb-close')?.click(); else pause(false); }
+            }
+        }
+        lastMenu = menu;
+        previous = pad.buttons.map(b => b.pressed);
+    }
+    requestAnimationFrame(frame);
+})();
+
+(() => {
     const canvas = document.getElementById('canvas');
     let timer = null;
     const state = {width: 1920, height: 1080};
@@ -1168,8 +1258,8 @@ const loadingUI = (() => {
 })();
 
 	engine.startGame({
-			'mainPack': "index.pck?build=ec22020720c70648",
-			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=ec22020720c70648" : name, size])),
+			'mainPack': "index.pck?build=fb99448d726466f5",
+			'fileSizes': Object.fromEntries(Object.entries(GODOT_CONFIG.fileSizes).map(([name, size]) => [name === 'index.pck' ? "index.pck?build=fb99448d726466f5" : name, size])),
 			'onProgress': function (current, total) {
 				startup.engineProgress(current, total);
 			},

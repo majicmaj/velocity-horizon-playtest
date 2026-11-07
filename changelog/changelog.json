@@ -1,5 +1,12 @@
 [
  {
+  "version": 78,
+  "commit": "20498da",
+  "date": "2026-11-06",
+  "subject": "Simplify browser game menus and improve phone layout",
+  "body": ""
+ },
+ {
   "version": 77,
   "commit": "ece3903",
   "date": "2026-11-06",

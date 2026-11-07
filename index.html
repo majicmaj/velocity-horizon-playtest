@@ -262,7 +262,7 @@ body {
 }
 		</style>
 		<link rel='icon' href='index.png'><style>#canvas { width: min(100vw, calc(100vh * 16 / 9)); height: min(100vh, calc(100vw * 9 / 16)); margin: auto; position: absolute; inset: 0; }</style>
-	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=fd387c2347f6') format('truetype');font-display:swap}
+	<style>@font-face{font-family:Velocity;src:url('ui/Rajdhani-Bold.ttf?v=7cac0adeb6f8') format('truetype');font-display:swap}
 #race-hud,#mobile-ui{--side:clamp(76px,17vh,172px)}
 #mobile-knob{background:none!important;box-shadow:none!important}
 #race-hud{position:fixed;inset:0;z-index:18;pointer-events:none;color:#f2f8ff;font-family:Velocity,system-ui,sans-serif;font-weight:700;font-style:italic;--side:clamp(76px,17vh,172px);--tab:clamp(110px,20vw,250px);--dial:clamp(300px,52vw,760px);text-shadow:0 2px 3px #000,0 0 7px #1f86ff}
@@ -280,7 +280,6 @@ body {
 #race-toast{position:absolute;top:calc(max(6px,env(safe-area-inset-top)) + min(56vw,860px)*.09);left:20%;right:20%;text-align:center;font-size:clamp(12px,2.5vh,23px);opacity:0;transition:opacity .15s}#race-toast.show{opacity:1}
 #mobile-ui{font-family:Velocity,system-ui!important}#mobile-top{display:none!important}#mobile-stick{width:calc(var(--side)*1.75)!important;height:calc(var(--side)*1.75)!important;bottom:max(10px,env(safe-area-inset-bottom))!important;left:max(5px,env(safe-area-inset-left))!important;border:0!important;border-radius:50%;background:none!important;color:transparent;font-size:0!important;overflow:visible;box-sizing:border-box}#mobile-stick .race-art{inset:0}#mobile-knob{position:absolute;width:30.7%;height:30.7%;left:34.65%;top:34.65%;border-radius:50%;filter:drop-shadow(0 0 6px #4aa8ff);pointer-events:none;transition:transform .04s linear}#mobile-knob .race-art{inset:0}
 #mobile-actions{grid-template-columns:repeat(2,var(--side))!important;gap:clamp(6px,1.4vh,14px)!important;right:calc(max(5px,env(safe-area-inset-right)) + var(--side)*.2)!important;bottom:max(8px,env(safe-area-inset-bottom))!important}#mobile-actions button{width:var(--side);height:var(--side)!important;border:0!important;background:none!important;position:relative;padding:0!important;color:transparent;font-size:0!important;min-height:48px!important;cursor:pointer}#mobile-actions .race-art{inset:-4%}#mobile-actions [data-action=boost] .race-art{inset:auto;left:-4%;bottom:-4%;width:127.7%;height:123%}#mobile-actions [data-action=reverse]{order:1}#mobile-actions [data-action=boost]{order:2}#mobile-actions [data-action=drift]{order:3}#mobile-actions [data-action=jump]{order:4}#mobile-actions button:active{filter:brightness(1.35);transform:scale(.96)}
-#mobile-panel{font-style:normal;background:linear-gradient(135deg,#071430,#0b1d3c)!important;border:1px solid #2f8fff;box-shadow:0 0 26px #1c7dff44}#mobile-panel button{font-family:Velocity,system-ui!important;border-color:#2f7fd8!important;background:#0c2247!important}#mobile-panel h2{color:#bfe0ff}
 @media (orientation:portrait){#race-hud,#mobile-ui{--side:clamp(68px,20vw,110px)}#race-hud{--dial:min(86vw,560px);--tab:min(40vw,230px)}#race-top{width:min(94vw,680px);top:calc(max(6px,env(safe-area-inset-top)) + var(--tab)*.4)}#race-toast{top:calc(var(--tab)*.4 + 56px + min(94vw,680px)*.08)}#race-fullscreen{top:calc(var(--tab)*.4 + 66px + min(94vw,680px)*.08)}#race-hud.touch #race-dial{bottom:calc(var(--side)*2 + 16px)}#mobile-stick{bottom:18px!important;width:43vw!important;height:43vw!important}}
 @media (min-width:1200px) and (orientation:landscape){#race-hud,#mobile-ui{--side:156px}}
 #lb{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));background:#030a1ccc;font-family:Velocity,system-ui,sans-serif;font-weight:700;color:#e8f4ff;overflow:auto}#lb[hidden]{display:none}
@@ -311,6 +310,26 @@ body {
 @keyframes bump-green{0%{opacity:0}20%{opacity:1;border-color:#6dff7e;box-shadow:0 0 18px #2fe04e,inset 0 0 12px #2fe04ecc}100%{opacity:0;border-color:#6dff7e}}
 @keyframes meter-alert{0%{opacity:1}25%{opacity:.3}40%{opacity:1}55%{opacity:.3}70%{opacity:1}100%{opacity:0}}
 #race-ghost{position:absolute;top:100%;right:3%;width:25%;margin-top:.5cqw;text-align:center;font-size:max(2.6cqw,13px);line-height:1.1}#race-ghost[hidden]{display:none}#race-ghost small{font-size:.58em;color:#9fd2ff;letter-spacing:.08em;margin-right:.45em}#race-ghost.ahead b{color:#7dffa0}#race-ghost.behind b{color:#ff8f7d}
+/* Shared start/pause screen. No backdrop filters or scene-rendering changes. */
+#mobile-menu.game-menu,#race-menu.game-menu{padding:clamp(14px,4vw,60px);box-sizing:border-box;background:linear-gradient(100deg,#020a18f5 0%,#04132be8 56%,#021025ad 100%);align-items:flex-start;overflow:auto;font-family:Velocity,system-ui,sans-serif;font-style:normal;text-shadow:none}
+#mobile-panel.game-panel,.game-panel.race-menu-card{position:relative;display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(28px,6vw,84px);width:min(1020px,100%);max-width:1020px;max-height:none;padding:24px 12px!important;margin:auto;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0;text-align:left;overflow:visible;box-sizing:border-box;color:#f3f8ff}
+.game-panel .menu-main{min-width:0}.game-panel .menu-brand{margin:0 0 14px!important;color:#80bff4;font-size:clamp(12px,1.4vw,16px);letter-spacing:.22em;line-height:1.2}.menu-brand strong{color:#fff}
+.game-panel h2{font-size:clamp(54px,7vw,90px)!important;line-height:.9;letter-spacing:-.025em!important;margin:0 0 26px!important;color:#fff!important;font-style:italic;font-weight:700;text-shadow:0 4px 30px #083c6d}
+.game-panel .menu-section-label{margin:0 0 16px!important;letter-spacing:.2em;font-size:12px;color:#8db0d2}.game-panel .menu-device{margin:0 0 26px!important;color:#d7e9fb;font-size:22px}
+.menu-kpis{display:flex;gap:32px;margin-bottom:22px}.menu-kpis[hidden]{display:none}.menu-kpis small{display:block;font-size:10px;letter-spacing:.17em;color:#7a9bbf}.menu-kpis b{font-size:25px;font-variant-numeric:tabular-nums;line-height:1.2}
+.game-panel button,.game-panel summary{font:700 16px Velocity,system-ui,sans-serif;cursor:pointer;touch-action:manipulation}.game-panel .menu-play{width:100%;min-height:58px;display:flex;align-items:center;justify-content:space-between;padding:12px 22px!important;border:1px solid #72c7ff!important;border-radius:5px!important;background:linear-gradient(110deg,#1c81dc,#1456ae)!important;color:#fff;font-size:24px!important;letter-spacing:.08em;box-shadow:0 8px 30px #006ac033}.menu-play>span:last-child{font-size:28px;color:#ffd494}
+.menu-secondary{display:flex;gap:12px;margin-top:10px}.game-panel .menu-secondary button{flex:1;min-height:48px;padding:9px 14px!important;border:1px solid #7299bf55!important;border-radius:5px!important;background:#10264080!important;color:#c9def5;letter-spacing:.035em}.game-panel [hidden]{display:none!important}
+.menu-side{padding-left:clamp(20px,4vw,44px);border-left:1px solid #537fa34d;min-width:0;align-self:center}.menu-modes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}.game-panel .menu-modes button{display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;min-height:86px;padding:10px 5px!important;border-radius:6px!important;border:1px solid #527fa255!important;background:#0b203780!important;color:#9ebad5;font-size:14px!important}.menu-modes button>svg{width:28px;height:28px;color:#a9d5f8}.game-panel .menu-modes button[aria-pressed=true]{color:#fff;background:#164b7e99!important;border-color:#5fbdff!important;box-shadow:inset 0 -2px #5fbdff}
+.game-panel #mobile-status{font-size:12px;line-height:1.35;min-height:0;margin:0 0 16px;color:#b6d6f3;max-width:38ch}.game-panel #mobile-status:empty{display:none}
+.menu-options{border-top:1px solid #537fa34d;margin-top:12px}.game-panel summary{display:flex;align-items:center;justify-content:space-between;min-height:48px;color:#a8c8e7;font-size:14px;list-style:none}.game-panel summary::-webkit-details-marker{display:none}.menu-options[open] summary{color:#fff}.menu-options[open] summary>span{transform:rotate(45deg)}
+.menu-settings{padding:6px 0 12px}.menu-guide{display:grid;gap:8px}.menu-guide>div{display:flex;justify-content:space-between;gap:14px;font-size:13px;color:#bbd2e8}.menu-guide kbd{font:700 12px Velocity,system-ui;color:#fff;white-space:nowrap}.menu-toggles{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px}.game-panel .menu-toggles label{display:flex!important;align-items:center;gap:7px;margin:0!important;font-size:12px;color:#a4c3df}.menu-toggles input{accent-color:#50b8ff;width:16px;height:16px}.game-panel .site-links{font-size:11px;margin:18px 0 0;opacity:.8}.game-panel .site-links a{text-decoration:none}
+.game-panel .menu-fullscreen{position:absolute;top:-14px;right:0;width:44px;min-height:44px;padding:0!important;border:1px solid #527fa255!important;border-radius:5px!important;background:#0b203780!important;color:#bdddf6;font:26px system-ui!important}
+.game-panel button:hover,.game-panel summary:hover{filter:brightness(1.16)}.game-panel :focus-visible,.game-panel .controller-focus{outline:2px solid #9fdcff!important;outline-offset:3px}
+body.game-menu-open #race-hud>:not(#race-menu),body.game-menu-open #mobile-ui>:not(#mobile-menu){visibility:hidden!important;pointer-events:none!important}
+@media(max-height:500px) and (orientation:landscape){#mobile-menu.game-menu,#race-menu.game-menu{padding: max(16px,env(safe-area-inset-top)) max(28px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(28px,env(safe-area-inset-left))}.game-panel.race-menu-card,#mobile-panel.game-panel{padding:12px 0!important;gap:40px}.game-panel h2{font-size:58px!important;margin-bottom:18px!important}.game-panel .menu-brand{margin-bottom:12px!important;font-size:11px}.game-panel .menu-section-label{margin-bottom:10px!important}.game-panel .menu-modes button{min-height:70px}.game-panel .menu-play{min-height:52px;font-size:21px!important}.game-panel .menu-fullscreen{top:-2px}.menu-kpis{margin-bottom:12px}.menu-kpis b{font-size:21px}.menu-side{padding-left:24px}.menu-options[open] .menu-guide{gap:5px}}
+@media(max-width:580px) and (orientation:portrait){#mobile-menu.game-menu,#race-menu.game-menu{padding:max(24px,env(safe-area-inset-top)) max(24px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left))}.game-panel.race-menu-card,#mobile-panel.game-panel{grid-template-columns:1fr;gap:30px;padding:18px 0!important}.menu-side{border-left:0;border-top:1px solid #537fa34d;padding:22px 0 0}.game-panel h2{font-size:68px!important;margin-bottom:24px!important}.game-panel .menu-modes button{min-height:76px}.game-panel .menu-fullscreen{top:8px}.game-panel .menu-play{min-height:56px}}
+
+.game-panel .menu-play:disabled{opacity:.45;cursor:wait;filter:none}
 </style><meta name="velocity-build" content="fb99448d726466f5"><style id="velocity-loading-style">#status {
  position:fixed; inset:0; z-index:100; overflow:hidden; visibility:visible;
  background:#060b0d; opacity:1; animation:loading-enter .6s ease-out both;
@@ -691,6 +710,97 @@ const loadingUI = (() => {
 })();
 
 (() => {
+    const icon = paths => `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${paths}</svg>`;
+    const guide = (mode, rows) => `<div class="menu-guide" data-guide="${mode}" hidden>${rows.map(([key, action]) => `<div><kbd>${key}</kbd><span>${action}</span></div>`).join('')}</div>`;
+    window.VelocityMenus = {
+        markup(phone, links) {
+            const p = phone ? 'mobile' : 'race-menu';
+            return `<section ${phone ? 'id="mobile-panel"' : ''} class="game-panel race-menu-card" role="dialog" aria-modal="true" aria-labelledby="${p}-title">
+                <button class="menu-fullscreen" data-menu-fullscreen aria-label="Fullscreen">⛶</button>
+                <div class="menu-main"><p class="menu-brand">VELOCITY <strong>HORIZON</strong></p><h2 id="${p}-title" data-menu-title>READY</h2>
+                <div class="menu-kpis" data-menu-kpis hidden><div><small>TIME</small><b data-menu-time>00:00</b></div><div><small>DISTANCE</small><b data-menu-distance>0 m</b></div></div>
+                <div class="menu-actions"><button id="${p}-resume" class="menu-play" data-menu-primary><span data-menu-play>PLAY</span><span aria-hidden="true">↗</span></button>
+                <div class="menu-secondary"><button id="${p}-restart" data-menu-restart>Restart</button><button id="${phone ? 'mobile-board' : 'race-menu-board'}">Leaderboard</button></div></div></div>
+                <div class="menu-side">${phone ? `<p class="menu-section-label">PLAY WITH</p><div class="menu-modes">
+                <button id="mobile-touch" data-mode="touch">${icon('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2"/>')}Touch</button><button id="mobile-tilt" data-mode="tilt" aria-label="Tilt / Recenter">${icon('<rect x="7" y="3" width="10" height="18" rx="2"/><path d="m3 8-2 4 2 4m18-8 2 4-2 4M11 18h2"/>')}Tilt</button><button id="mobile-controller" data-mode="controller">${icon('<path d="M7 6h10c3 0 5 11 3 12s-5-3-6-3h-4c-1 0-4 4-6 3S4 6 7 6Z"/><path d="M6 10h5m-2.5-2.5v5M16 10h.01M18 12h.01"/>')}Gamepad</button></div>
+                <p id="mobile-status" role="status" aria-live="polite"></p>` : '<p class="menu-section-label">INPUT</p><p class="menu-device" data-menu-device>Keyboard</p>'}
+                <details class="menu-options"><summary>Controls &amp; settings <span aria-hidden="true">+</span></summary><div class="menu-settings">
+                ${guide('keyboard', [['WASD / arrows','Drive'],['Space / Enter','Jump · air boost'],['Shift','Boost'],['Ctrl','Drift'],['Esc','Pause']])}
+                ${guide('controller', [['Stick · RT / LT','Drive'],['A / Cross','Jump · air boost'],['LB / X','Boost'],['RB / B','Drift'],['Start','Pause']])}
+                ${guide('touch', [['Drag stick','Run · steer · brake'],['Jump twice','Air boost'],['Boost / Drift','Hold button']])}
+                ${guide('tilt', [['Lean forward','Run'],['Lean left / right','Steer'],['Lean back','Brake'],['Flick upward','Jump']])}
+                ${phone ? '<div class="menu-toggles"><label><input id="mobile-invert-steer" type="checkbox">Invert steering</label><label><input id="mobile-invert-tilt" type="checkbox">Invert tilt</label></div>' : ''}
+                ${links.replaceAll('>vh.hobbyhood.app<','>Home<')}</div></details></div>
+            </section>`;
+        },
+        start() {
+            if (!document.body) return;
+            const mobile = window.__velocityMobile, state = mobile.state;
+            let booted = false, previousMenu = null, showing = false;
+            const panels = [...document.querySelectorAll('.game-panel')];
+            const current = () => window.__velocityLeaderboard?.isOpen() ? null : state.paused ? document.getElementById(state.enabled ? 'mobile-menu' : 'race-menu') : null;
+            const focusable = menu => [...menu.querySelectorAll('button,summary,input,a')].filter(el => !el.disabled && el.getClientRects().length);
+            const put = (node, text) => { if (node && node.textContent !== text) node.textContent = text; };
+            panels.forEach(panel => {
+                panel.querySelector('[data-menu-fullscreen]').onclick = () => document.getElementById('race-fullscreen')?.click();
+                panel.querySelector('[data-menu-primary]').addEventListener('click', event => {
+                    if (state.completed) { event.stopImmediatePropagation(); panel.querySelector('[data-menu-restart]').click(); }
+                }, true);
+            });
+            addEventListener('keydown', event => {
+                const menu = current();
+                if (!menu) return;
+                const details = menu.querySelector('details[open]');
+                if (event.key === 'Escape' && (details || state.enabled)) {
+                    event.preventDefault(); event.stopImmediatePropagation();
+                    if (details) { details.open = false; details.querySelector('summary').focus(); }
+                    else mobile.resume();
+                } else if (['Tab','ArrowDown','ArrowUp','ArrowLeft','ArrowRight'].includes(event.key)) {
+                    const choices = focusable(menu); if (!choices.length) return;
+                    const sign = ['ArrowUp','ArrowLeft'].includes(event.key) || event.shiftKey ? -1 : 1;
+                    const at = choices.indexOf(document.activeElement);
+                    choices[(at + sign + choices.length) % choices.length].focus();
+                    event.preventDefault(); event.stopImmediatePropagation();
+                } else if (event.key === 'Enter' && menu.contains(document.activeElement)) {
+                    document.activeElement.click(); event.preventDefault(); event.stopImmediatePropagation();
+                }
+            }, true);
+            function frame() {
+                if (!window.__velocityStartup?.state.ready) return;
+                if (!booted) {
+                    booted = true;
+                    if (!state.enabled && !new URLSearchParams(location.search).has('benchmark')) { state.paused = true; state.pause_serial++; }
+                }
+                const menu = current(), hasRun = (state.time || 0) > .01 || (state.distance || 0) > 1;
+                const visible = !!menu || !!window.__velocityLeaderboard?.isOpen();
+                if (visible !== showing) { showing = visible; document.body.classList.toggle('game-menu-open', showing); }
+                if (!menu) { previousMenu = null; return; }
+                const mode = window.__velocityController?.state.active ? 'controller' : state.enabled ? mobile.core.mode : 'keyboard';
+                [menu.querySelector('.game-panel')].forEach(panel => {
+                    const toggles = panel.querySelector('.menu-toggles');
+                    if (toggles) toggles.hidden = mode !== 'tilt';
+                    put(panel.querySelector('[data-menu-title]'), state.completed ? 'FINISHED' : hasRun ? 'PAUSED' : 'READY');
+                    put(panel.querySelector('[data-menu-play]'), state.completed ? 'PLAY AGAIN' : hasRun ? 'RESUME' : 'PLAY');
+                    panel.querySelector('[data-menu-primary]').disabled = mode === 'tilt' && !mobile.core.calibrated;
+                    panel.querySelector('[data-menu-restart]').hidden = !hasRun && !state.completed;
+                    panel.querySelector('[data-menu-kpis]').hidden = !hasRun;
+                    put(panel.querySelector('[data-menu-time]'), `${Math.floor((state.time || 0)/60).toString().padStart(2,'0')}:${Math.floor((state.time || 0)%60).toString().padStart(2,'0')}`);
+                    put(panel.querySelector('[data-menu-distance]'), `${Math.floor(state.distance || 0).toLocaleString()} m`);
+                    put(panel.querySelector('[data-menu-device]'), mode === 'controller' ? 'Gamepad connected' : 'Keyboard');
+                    panel.querySelectorAll('[data-guide]').forEach(el => { el.hidden = el.dataset.guide !== mode; });
+                    panel.querySelectorAll('[data-mode]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.mode === mode)));
+                });
+                if (menu !== previousMenu) {
+                    if (menu) { menu.querySelector('details').open = false; menu.querySelector('[data-menu-primary]').focus({preventScroll:true}); }
+                    previousMenu = menu;
+                }
+            }
+            setInterval(frame, 80);
+        }
+    };
+})();
+
+(() => {
     if (window.__velocityMobile) return;
     const enabled = new URLSearchParams(window.location?.search || '').get('mobile') === '1' ||
         (typeof matchMedia === 'function' && matchMedia('(pointer:coarse)').matches && navigator.maxTouchPoints > 0);
@@ -731,7 +841,7 @@ const loadingUI = (() => {
     api.unlock_audio = unlockAudio;
     // Relative pages work on any host the build is served from; the home link is the public address.
     window.__velocitySiteLinks = '<p class="site-links"><a href="https://vh.hobbyhood.app" target="_blank" rel="noopener">vh.hobbyhood.app</a> · '
-        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v77</span></p>';
+        + '<a href="leaderboard/" target="_blank" rel="noopener">Leaderboard</a> · <a href="changelog/" target="_blank" rel="noopener">Changelog</a> <span class="site-version">v78</span></p>';
     if (!enabled) return;
     const meta = document.querySelector('meta[name=viewport]');
     if (meta) meta.content = 'width=device-width,initial-scale=1,viewport-fit=cover';
@@ -748,19 +858,17 @@ const loadingUI = (() => {
     ui.innerHTML = `<div id="mobile-top"><button id="mobile-settings">Controls</button><button id="mobile-pause">Pause</button></div>
     <div id="mobile-stick" role="application" aria-label="Drag to steer, run or brake">Drag to steer<br>↑ run · ↓ brake</div>
     <div id="mobile-actions"><button data-action="jump">Jump</button><button data-action="boost">Boost</button><button data-action="drift">Drift</button><button data-action="reverse">Reverse</button></div>
-    <div id="mobile-menu"><div id="mobile-panel"><h2>Phone controls</h2><p>Landscape recommended. Tilt forward to run, left/right to steer, back to brake. A quick upward flick jumps.</p>
-    <p>Hold the phone at your comfortable playing angle when calibrating. Touch Jump is always available.</p><p id="mobile-status" role="status" aria-live="polite">Choose tilt or touch controls.</p>
-    <div class="choices"><button id="mobile-tilt">Enable tilt / Recenter</button><button id="mobile-touch">Use touch / keyboard</button><button id="mobile-resume">Resume</button><button id="mobile-restart">Restart run</button><button id="mobile-board">Leaderboard</button></div>
-    ${window.__velocitySiteLinks}<label><input id="mobile-invert-steer" type="checkbox"> Invert steering</label><label><input id="mobile-invert-tilt" type="checkbox"> Invert forward / back</label></div></div>`;
+    <div id="mobile-menu" class="game-menu">${window.VelocityMenus.markup(true, window.__velocitySiteLinks)}</div>`;
     document.body.appendChild(ui);
     const find = id => document.getElementById(id), menu = find('mobile-menu'), status = find('mobile-status');
     function openMenu() { pause(true); menu.hidden = false; find('mobile-pause').textContent = 'Resume'; }
-    function play() { unlockAudio(); request++; core.calibrating = false; pause(false); menu.hidden = true; document.getElementById('canvas')?.focus(); find('mobile-pause').textContent = 'Pause'; }
-    api.use_controller = () => { core.mode = 'controller'; core.message = 'Controller: center the stick and release buttons after resuming'; play(); };
+    function play() { if (core.mode === 'tilt' && !core.calibrated) return; unlockAudio(); request++; core.calibrating = false; pause(false); menu.hidden = true; document.getElementById('canvas')?.focus(); find('mobile-pause').textContent = 'Pause'; }
+    api.resume = play;
+    api.use_controller = () => { core.mode = 'controller'; core.message = 'Release controls after resuming'; play(); };
     find('mobile-settings').onclick = openMenu;
     find('mobile-pause').onclick = () => { if (state.paused) play(); else openMenu(); };
     find('mobile-resume').onclick = play;
-    find('mobile-touch').onclick = () => { core.mode = 'touch'; core.calibrated = false; core.message = 'Touch controls'; play(); };
+    find('mobile-touch').onclick = () => { core.mode = 'touch'; core.calibrated = false; request++; core.calibrating = false; core.message = 'Touch controls'; };
     find('mobile-restart').onclick = () => { state.restart_serial++; play(); };
     find('mobile-board').onclick = () => window.__velocityLeaderboard?.view();
     find('mobile-invert-steer').onchange = e => { core.invertSteer = e.target.checked; };
@@ -778,7 +886,7 @@ const loadingUI = (() => {
     find('mobile-tilt').onclick = () => {
         unlockAudio();
         if (!isSecureContext || typeof DeviceOrientationEvent === 'undefined') {
-            core.message = 'Motion unavailable here — choose Use touch'; status.textContent = core.message; return;
+            core.message = 'Motion unavailable here — choose Touch'; status.textContent = core.message; return;
         }
         const id = ++request;
         const ask = type => { try { return typeof type?.requestPermission === 'function' ? type.requestPermission() : Promise.resolve('granted'); } catch (e) { return Promise.reject(e); } };
@@ -787,10 +895,10 @@ const loadingUI = (() => {
         Promise.allSettled([orientationPermission, motionPermission]).then(results => {
             if (id !== request) return;
             if (results[0].status !== 'fulfilled' || results[0].value !== 'granted') {
-                core.message = 'Motion permission denied — choose Use touch'; status.textContent = core.message; return;
+                core.message = 'Motion permission denied — choose Touch'; status.textContent = core.message; return;
             }
             sensors(); core.angle = angle(); core.calibrate(performance.now());
-            status.textContent = core.message;
+            status.textContent = core.message === 'Touch controls' ? '' : core.message;
         });
     };
     const pad = find('mobile-stick'); let stickPointer = null;
@@ -817,8 +925,7 @@ const loadingUI = (() => {
     setInterval(() => {
         if (!window.__velocityStartup?.state.ready) return;
         ui.hidden = false; api.tick();
-        if (core.calibrated && core.mode === 'tilt' && !menu.hidden && core.message.startsWith('Tilt ready')) { pause(false); menu.hidden = true; core.message = 'Tilt enabled'; }
-        status.textContent = core.message;
+        status.textContent = core.message === 'Touch controls' ? '' : core.message;
         find('mobile-pause').textContent = state.paused ? 'Resume' : 'Pause';
     }, 200);
 })();
@@ -831,19 +938,17 @@ const loadingUI = (() => {
         stick:[0,0,365,365],boost:[369,0,246,237],jump:[619,0,190,184],drift:[813,0,187,182],reverse:[1004,0,193,180],
         knob:[1201,0,112,112],pause:[0,369,270,97],controls:[274,369,320,93],bar:[0,470,1155,90]
     };
-    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=fd387c2347f6" alt=""></span>`;
+    const layer = (file,id='') => `<span class="race-art"${id?` id="${id}"`:''} aria-hidden="true"><img src="ui/${file}?v=7cac0adeb6f8" alt=""></span>`;
     function art(name) {
         const [x,y,w,h] = regions[name];
-        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=fd387c2347f6" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
+        return `<span class="race-art" aria-hidden="true"><img src="ui/hud-atlas.png?v=7cac0adeb6f8" style="width:${W/w*100}%;height:${H/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%" alt=""></span>`;
     }
     const hud = document.createElement('div'); hud.id = 'race-hud'; hud.hidden = true;
     hud.innerHTML = `<button id="race-controls" class="race-tab" aria-label="Controls">${art('controls')}<span>CONTROLS</span></button>
         <div id="race-top">${art('bar')}<div id="race-values"><div><b id="race-ladybugs">000</b><small>LADYBUGS</small></div><div><b id="race-beetles">000</b><small>BEETLES</small></div><div><b id="race-distance">0 m</b><small>DISTANCE</small></div><div><b id="race-time">00:00</b><small>TIME</small></div></div><div id="race-ghost" hidden><small>GHOST</small><b id="race-ghost-gap">+0.00</b></div></div>
         <button id="race-pause" class="race-tab" aria-label="Pause">${art('pause')}<span>PAUSE</span></button>
         <button id="race-fullscreen" aria-label="Fullscreen" title="Fullscreen">⛶</button><div id="race-toast" role="status"></div>
-        <div id="race-menu" hidden><div class="race-menu-card" role="dialog" aria-label="Paused"><h2>PAUSED</h2>
-            <ul class="race-keys"><li><b>W / ↑</b> run</li><li><b>S / ↓</b> brake · reverse</li><li><b>A D / ← →</b> steer</li><li><b>Space</b> jump · again in air: boost jolt</li><li><b>Shift</b> boost (on the ground)</li><li><b>Ctrl</b> drift</li><li><b>R</b> restart</li><li><b>M</b> mute</li><li><b>Esc</b> resume</li></ul>
-            <div class="race-menu-actions"><button id="race-menu-resume">Resume</button><button id="race-menu-restart">Restart run</button><button id="race-menu-board">Leaderboard</button></div>${window.__velocitySiteLinks || ''}</div></div>
+        <div id="race-menu" class="game-menu" hidden>${window.VelocityMenus.markup(false, window.__velocitySiteLinks || '')}</div>
         <div id="race-dial">${layer('hud-dial.png')}${layer('hud-dial-fill.png','race-arc')}${layer('hud-dial-fill.png','race-fill')}<span id="race-meter-alert" aria-hidden="true"></span><div id="race-speed">000 <small>km/h</small></div><div id="race-charge" aria-label="Boost">100%</div></div>`;
     document.body.appendChild(hud);
     const find = id => document.getElementById(id);
@@ -854,7 +959,7 @@ const loadingUI = (() => {
         if (state.enabled) find('mobile-settings').click();
         else { mobile.unlock_audio?.(); pause(true); }
     };
-    const resume = () => { pause(false); document.getElementById('canvas')?.focus(); };
+    const resume = () => { mobile.unlock_audio?.(); pause(false); document.getElementById('canvas')?.focus(); };
     find('race-menu-resume').onclick = resume;
     find('race-menu-restart').onclick = () => { state.restart_serial++; resume(); };
     find('race-menu-board').onclick = () => window.__velocityLeaderboard?.view();
@@ -979,7 +1084,7 @@ const loadingUI = (() => {
     const state = window.__velocityMobile.state;
     const base = 'https://velocity-horizon-leaderboard.majed-tarabein.workers.dev'.replace(/\/+$/, '');
     // In the game only runs of this exact version are shown and submitted; older versions are on the website.
-    const version = 'v77';
+    const version = 'v78';
     const validBase = /^(https:\/\/|http:\/\/(127\.0\.0\.1|localhost)[:/])\S*$/.test(base);
     // Local development builds never talk to the production board (the Worker only allows the real site's origin).
     const remote = validBase && (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname) || /^http:\/\/(127\.0\.0\.1|localhost)[:/]/.test(base));
@@ -1168,18 +1273,11 @@ const loadingUI = (() => {
     const style = document.createElement('style');
     style.textContent = '.controller-focus{outline:3px solid #64ddff!important;outline-offset:3px}';
     document.head.appendChild(style);
-    const help = 'Controller: stick / D-pad steer and run; RT run, LT brake / reverse; A / Cross jump; X / Square or LB boost; B / Circle or RB drift; Start pause. Center controls after resuming.';
-    const hints = document.createElement('p'); hints.textContent = help;
-    document.querySelector('.race-keys')?.after(hints);
-    if (find('mobile-panel')) {
-        const button = document.createElement('button'); button.id = 'mobile-controller'; button.textContent = 'Use controller';
-        button.onclick = () => {
-            if (state.index < 0) { find('mobile-status').textContent = 'Pair a gamepad in Android Bluetooth / USB settings, then press a button. If undetected, try its Android / XInput mode, or choose touch / keyboard for keyboard-mode HID.'; return; }
-            mobile.use_controller();
+    if (find('mobile-controller')) {
+        find('mobile-controller').onclick = () => {
+            if (state.index < 0) { mobile.core.message = 'Pair a gamepad, then press a button.'; find('mobile-status').textContent = mobile.core.message; return; }
+            mobile.core.mode = 'controller'; mobile.core.calibrating = false; mobile.core.message = 'Release controls before playing';
         };
-        find('mobile-panel').querySelector('.choices').prepend(button);
-        const text = document.createElement('p'); text.textContent = help;
-        find('mobile-panel').appendChild(text);
     }
     function frame(now) {
         requestAnimationFrame(frame);
@@ -1191,11 +1289,11 @@ const loadingUI = (() => {
         for (const candidate of pads) {
             if (candidate?.connected && candidate.mapping === 'standard' && moving(candidate) && candidate.index !== state.index && (!pad?.connected || !moving(pad))) {
                 pad = candidate; state.index = candidate.index; previous = []; state.active = true;
-                note('Controller connected — release controls to start'); break;
+                note('Gamepad connected · release controls'); break;
             }
         }
         if (!pad?.connected) {
-            if (state.index >= 0) { if (state.active) pause(true); note('Controller disconnected — reconnect or use touch / keyboard'); }
+            if (state.index >= 0) { if (state.active) pause(true); mobile.core.message = 'Gamepad disconnected. Choose Touch or reconnect.'; note('Gamepad disconnected'); }
             state.index = -1; clear(); return;
         }
         state.name = pad.id; state.mapping = pad.mapping;
@@ -1214,17 +1312,18 @@ const loadingUI = (() => {
                 if (menu?.id === 'lb') find('lb-close')?.click();
                 else pause(!mobile.state.paused);
             } else if (menu) {
-                const controls = [...menu.querySelectorAll('button,input:not([type=checkbox]),a')].filter(el => visible(el) && !el.disabled);
-                if (menu !== lastMenu) { focused = Math.max(0, controls.findIndex(el => el.id === 'mobile-controller')); nextMove = 0; }
+                const controls = [...menu.querySelectorAll('button,input,a,summary')].filter(el => visible(el) && !el.disabled);
+                if (menu !== lastMenu) { focused = Math.max(0, controls.findIndex(el => el.hasAttribute('data-menu-primary'))); nextMove = 0; }
                 const axis = pad.axes[1] || 0;
                 const direction = pressed(13) || pressed(15) || axis > .5 ? 1 : pressed(12) || pressed(14) || axis < -.5 ? -1 : 0;
                 if (direction && now >= nextMove && controls.length) { focused = (focused + direction + controls.length) % controls.length; nextMove = now + 220; }
                 if (!direction) nextMove = 0;
                 menu.querySelectorAll('.controller-focus').forEach(el => el.classList.remove('controller-focus'));
+                focused = Math.max(0, Math.min(focused, controls.length - 1));
                 const selected = controls[focused];
                 if (selected) { selected.classList.add('controller-focus'); selected.focus({preventScroll:true}); selected.scrollIntoView({block:'nearest'}); }
                 if (edge(0)) selected?.click();
-                if (edge(1)) { if (menu.id === 'lb') find('lb-close')?.click(); else pause(false); }
+                if (edge(1)) { if (menu.id === 'lb') find('lb-close')?.click(); else { const details = menu.querySelector('details[open]'); if (details) { details.open = false; details.querySelector('summary').focus(); } else pause(false); } }
             }
         }
         lastMenu = menu;
@@ -1233,6 +1332,7 @@ const loadingUI = (() => {
     requestAnimationFrame(frame);
 })();
 
+window.VelocityMenus?.start();
 (() => {
     const canvas = document.getElementById('canvas');
     let timer = null;
